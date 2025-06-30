@@ -37,20 +37,20 @@ const WorkHubPage: React.FC = () => {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [activeTab, setActiveTab] = useState<'tareas' | 'proyecto'>('tareas');
   const [showAccountModal, setShowAccountModal] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState<{id: number, name: string} | null>(() => {
+  const [selectedAccount, setSelectedAccount] = useState<{ id: number, name: string } | null>(() => {
     // Intentar cargar la cuenta seleccionada desde localStorage
-    const savedAccount = storage.getItem<{id: number, name: string}>('selectedWorkHubAccount');
+    const savedAccount = storage.getItem<{ id: number, name: string }>('selectedWorkHubAccount');
     return savedAccount;
   });
   const [isLoading, setIsLoading] = useState(false);
   const [projectItems, setProjectItems] = useState<ProjectItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('today');
-  const [taskAssignments, setTaskAssignments] = useState<TaskAssignment[]>([]); 
-  const [groupedItems, setGroupedItems] = useState<{[key: string]: (ProjectItem | TaskAssignment)[]}>({}); 
+  const [taskAssignments, setTaskAssignments] = useState<TaskAssignment[]>([]);
+  const [groupedItems, setGroupedItems] = useState<{ [key: string]: (ProjectItem | TaskAssignment)[] }>({});
   const [sectionOrder, setSectionOrder] = useState<string[]>([]);
-  const [fieldValues, setFieldValues] = useState<{[key: string]: string}>(() => {
+  const [fieldValues, setFieldValues] = useState<{ [key: string]: string }>(() => {
     // Intentar cargar los valores de los campos desde localStorage
-    const savedValues = storage.getItem<{[key: string]: string}>('fieldValues');
+    const savedValues = storage.getItem<{ [key: string]: string }>('fieldValues');
     return savedValues || {};
   });
   const [modalState, setModalState] = useState({
@@ -59,26 +59,26 @@ const WorkHubPage: React.FC = () => {
     fieldType: 'text' as 'text' | 'number' | 'select',
     initialValue: '',
     selectOptions: [] as { value: string; label: string }[],
-    onSave: (value: string) => {}
+    onSave: (value: string) => { }
   });
-  const [isDarkMode, setIsDarkMode] = useState(() => 
+  const [isDarkMode, setIsDarkMode] = useState(() =>
     document.body.classList.contains('dark-theme')
   );
-  
+
   // Listen for theme changes
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsDarkMode(document.body.classList.contains('dark-theme'));
     });
-    
+
     observer.observe(document.body, {
       attributes: true,
       attributeFilter: ['class']
     });
-    
+
     return () => observer.disconnect();
   }, []);
-  
+
   useEffect(() => {
     setIsVisible(true);
 
@@ -87,12 +87,12 @@ const WorkHubPage: React.FC = () => {
       try {
         // Cargar las asignaciones de tareas desde localStorage pero filtrar las dummy
         let savedAssignments = storage.getItem<TaskAssignment[]>('taskAssignments') || [];
-        
+
         // Filtrar solo tareas reales (que tengan un itemId que comience con A- o B-)
-        savedAssignments = savedAssignments.filter(task => 
+        savedAssignments = savedAssignments.filter(task =>
           task.itemId && (task.itemId.startsWith('A-') || task.itemId.startsWith('B-'))
         );
-        
+
         // Filtrar solo las tareas asignadas al usuario actual
         if (user) {
           const userTasks = savedAssignments.filter(task => task.userId === user.id);
@@ -102,13 +102,13 @@ const WorkHubPage: React.FC = () => {
         console.error('Error loading task assignments:', error);
         setTaskAssignments([]);
       }
-      
+
       // Cargar ítems del proyecto si hay una cuenta seleccionada
       if (selectedAccount) {
         loadProjectItems();
       }
     };
-    
+
     // Cargar datos inicialmente
     loadData();
   }, [user, selectedAccount]);
@@ -117,17 +117,17 @@ const WorkHubPage: React.FC = () => {
   useEffect(() => {
     // Create a combined list of project items and task assignments
     const combined: (ProjectItem | TaskAssignment)[] = [];
-    
+
     // Solo agregar items si hay una cuenta seleccionada
     if (selectedAccount) {
       // Agregar los items del proyecto filtrados por la cuenta seleccionada
       combined.push(...projectItems);
-      
+
       // Add task assignments that aren't already in project items
       taskAssignments.forEach(task => {
         // Check if this task is already in project items
         const existingItem = projectItems.find(item => item.id === task.itemId);
-        
+
         // If not found and it's a valid task with an itemId, add it
         if (!existingItem && task.itemId && (task.itemId.startsWith('A-') || task.itemId.startsWith('B-'))) {
           combined.push({
@@ -141,21 +141,21 @@ const WorkHubPage: React.FC = () => {
         }
       });
     }
-    
+
     // Group items by section
-    const grouped: {[key: string]: (ProjectItem | TaskAssignment)[]} = {};
-    
+    const grouped: { [key: string]: (ProjectItem | TaskAssignment)[] } = {};
+
     combined.forEach(item => {
       const sectionId = item.sectionId || 'unknown';
       const sectionName = getSectionNameFromId(sectionId);
-      
+
       if (!grouped[sectionName]) {
         grouped[sectionName] = [];
       }
-      
+
       grouped[sectionName].push(item);
     });
-    
+
     // Define the order of sections
     const order = [
       'Set Up Estrategia Digital',
@@ -166,7 +166,7 @@ const WorkHubPage: React.FC = () => {
       'Set Up Producción',
       'Set up Difusión'
     ];
-    
+
     setGroupedItems(grouped);
     setSectionOrder(order);
   }, [projectItems, taskAssignments, selectedAccount]);
@@ -178,24 +178,24 @@ const WorkHubPage: React.FC = () => {
         setProjectItems([]);
         return;
       }
-      
+
       // Cargar los ítems seleccionados y los datos del formulario para la cuenta actual
-      const selectedItems = storage.getItem<{[key: string]: boolean}>('selectedItems') || {};
-      const formData = storage.getItem<{[key: string]: any[]}>('formData') || {};
-      const completedItems = storage.getItem<{[key: string]: boolean}>('completedItems') || {};
-      
+      const selectedItems = storage.getItem<{ [key: string]: boolean }>('selectedItems') || {};
+      const formData = storage.getItem<{ [key: string]: any[] }>('formData') || {};
+      const completedItems = storage.getItem<{ [key: string]: boolean }>('completedItems') || {};
+
       // Crear un identificador para la cuenta actual
       const accountKey = `account-${selectedAccount.id}`;
-      
+
       // Filtrar los ítems que pertenecen a la cuenta seleccionada usando el accountKey
       const items: ProjectItem[] = [];
-      
+
       // Procesar cada sección
       Object.entries(formData).forEach(([sectionId, data]: [string, any[]]) => {
         data.forEach((item) => {
           // Solo incluir items reales (que comiencen con A- o B-) y que estén seleccionados
           const itemKey = `${accountKey}-${item.id}`;
-          if (selectedItems[item.id] && (item.id.startsWith('A-') || item.id.startsWith('B-'))) {            
+          if (selectedItems[item.id] && (item.id.startsWith('A-') || item.id.startsWith('B-'))) {
             items.push({
               id: item.id,
               concept: item.concept,
@@ -206,7 +206,7 @@ const WorkHubPage: React.FC = () => {
           }
         });
       });
-      
+
       // Actualizar el estado con los ítems filtrados
       setProjectItems(items);
       console.log(`Loaded ${items.length} items for account ${selectedAccount.name}`);
@@ -218,51 +218,51 @@ const WorkHubPage: React.FC = () => {
 
   // Función para obtener el nombre de la sección
   const getSectionName = (sectionId: string): string => {
-    const sectionMapping: {[key: string]: string} = {
+    const sectionMapping: { [key: string]: string } = {
       'estrategia': 'Set Up Estrategia Digital',
-      'antropologicos': 'Estudios Antropológicos', 
+      'antropologicos': 'Estudios Antropológicos',
       'otros-estudios': 'Otros Estudios',
       'acompanamiento': 'Set Up Acompañamiento Digital',
       'gerencia': 'Set Up Gerencia Digital',
       'produccion': 'Set Up Producción',
       'difusion': 'Set up Difusión'
     };
-    
+
     return sectionMapping[sectionId] || sectionId;
   };
 
   // Función para obtener las tareas según la categoría seleccionada
   const getFilteredTasks = () => {
     if (!taskAssignments.length) return [];
-    
+
     // Filtrar solo tareas reales (que tengan un itemId que comience con A- o B-)
-    const realTasks = taskAssignments.filter(task => 
+    const realTasks = taskAssignments.filter(task =>
       task.itemId && (task.itemId.startsWith('A-') || task.itemId.startsWith('B-'))
     );
-    
+
     if (!realTasks.length) return [];
-    
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
+
     const nextWeekStart = new Date(today);
     nextWeekStart.setDate(today.getDate() + 7 - today.getDay());
-    
+
     const nextWeekEnd = new Date(nextWeekStart);
     nextWeekEnd.setDate(nextWeekStart.getDate() + 6);
-    
+
     return taskAssignments.filter(task => {
       // Si la categoría es "all", mostrar todas las tareas reales
       if (selectedCategory === 'all') return true;
-      
-      if (!task.dueDate) return selectedCategory === 'no-date'; 
-      
+
+      if (!task.dueDate) return selectedCategory === 'no-date';
+
       const dueDate = new Date(task.dueDate);
       dueDate.setHours(0, 0, 0, 0);
-      
+
       switch (selectedCategory) {
         case 'past':
           return dueDate < today;
@@ -289,35 +289,35 @@ const WorkHubPage: React.FC = () => {
   // Función para obtener el conteo de tareas por categoría
   const getTaskCountForCategory = (categoryId: string) => {
     if (!taskAssignments.length) return 0;
-    
+
     // Filtrar solo tareas reales (que tengan un itemId que comience con A- o B-)
-    const realTasks = taskAssignments.filter(task => 
+    const realTasks = taskAssignments.filter(task =>
       task.itemId && (task.itemId.startsWith('A-') || task.itemId.startsWith('B-'))
     );
-    
+
     if (!realTasks.length) return 0;
 
     // Si la categoría es "all", mostrar el total de tareas
     if (categoryId === 'all') return realTasks.length;
-    
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
+
     const nextWeekStart = new Date(today);
     nextWeekStart.setDate(today.getDate() + 7 - today.getDay());
-    
+
     const nextWeekEnd = new Date(nextWeekStart);
     nextWeekEnd.setDate(nextWeekStart.getDate() + 6);
-    
+
     return taskAssignments.filter(task => {
       if (!task.dueDate || !task.itemId || !(task.itemId.startsWith('A-') || task.itemId.startsWith('B-'))) return false;
-      
+
       const dueDate = new Date(task.dueDate);
       dueDate.setHours(0, 0, 0, 0);
-      
+
       switch (categoryId) {
         case 'past':
           return dueDate < today;
@@ -348,21 +348,21 @@ const WorkHubPage: React.FC = () => {
     { id: 'later', label: 'Después', icon: <Calendar size={16} /> },
     { id: 'no-date', label: 'Sin fecha', icon: <Calendar size={16} /> }
   ];
-  
+
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategory(categoryId);
   };
-  
+
   // Función para abrir el modal
   const openModal = (
-    itemId: string, 
-    fieldName: string, 
+    itemId: string,
+    fieldName: string,
     fieldType: 'text' | 'number' | 'select' = 'text',
     selectOptions: { value: string; label: string }[] = []
   ) => {
     const fieldKey = `${itemId}-${fieldName}`;
     const currentValue = fieldValues[fieldKey] || '';
-    
+
     setModalState({
       isOpen: true,
       fieldName,
@@ -375,7 +375,7 @@ const WorkHubPage: React.FC = () => {
           [fieldKey]: value
         };
         setFieldValues(updatedValues);
-        
+
         // Guardar en localStorage
         storage.setItem('fieldValues', updatedValues);
       }
@@ -395,18 +395,18 @@ const WorkHubPage: React.FC = () => {
     const fieldKey = `${itemId}-${fieldName}`;
     return fieldValues[fieldKey] || '';
   };
-  
-  {/* Mapeo de secciones con sus títulos correctos */}
+
+  {/* Mapeo de secciones con sus títulos correctos */ }
   const sectionMapping = {
     'estrategia': 'Set Up Estrategia Digital',
-    'antropologicos': 'Estudios Antropológicos', 
+    'antropologicos': 'Estudios Antropológicos',
     'otros-estudios': 'Otros Estudios',
     'acompanamiento': 'Set Up Acompañamiento Digital',
     'gerencia': 'Set Up Gerencia Digital',
     'produccion': 'Set Up Producción',
     'difusion': 'Set up Difusión'
   };
-  
+
   // Función para obtener el nombre de la sección a partir del sectionId
   const getSectionNameFromId = (sectionId: string): string => {
     return sectionMapping[sectionId as keyof typeof sectionMapping] || sectionId;
@@ -415,15 +415,15 @@ const WorkHubPage: React.FC = () => {
   // Función para manejar la selección de cuenta
   const handleSelectAccount = (accountId: number, accountName: string) => {
     setSelectedAccount({ id: accountId, name: accountName });
-    setIsLoading(true); 
-    
+    setIsLoading(true);
+
     // Simular carga de datos
     setTimeout(() => {
       // Guardar la cuenta seleccionada en localStorage
       storage.setItem('selectedWorkHubAccount', { id: accountId, name: accountName });
-      
+
       // Recargar los datos del proyecto para esta cuenta
-      loadProjectItems(); 
+      loadProjectItems();
       setIsLoading(false);
     }, 1500);
   };
@@ -431,24 +431,24 @@ const WorkHubPage: React.FC = () => {
   return (
     <div className={`workhub-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <MenuBackground />
-      
+
       <div className="workhub-header">
         <div className="workhub-breadcrumb-container">
           <span className="workhub-breadcrumb-separator">/</span>
-          <button 
+          <button
             onClick={() => navigate('/dashboard')}
             className="workhub-breadcrumb-link"
           >
             Menú
           </button>
         </div>
-        
+
         <h1 className="workhub-title">
           Mi workhub {selectedAccount && activeTab === 'proyecto' && <AccountBadge accountName={selectedAccount.name} />}
         </h1>
-        
+
         <div className="header-right">
-          {activeTab === 'proyecto' && <button 
+          {activeTab === 'proyecto' && <button
             className="account-select-button"
             onClick={() => setShowAccountModal(true)}
             style={{
@@ -471,7 +471,7 @@ const WorkHubPage: React.FC = () => {
                 color: '#0171E2'
               })
             }}
-          > 
+          >
             <Users size={16} style={{ flexShrink: 0 }} />
             <span>Seleccionar cuenta</span>
           </button>}
@@ -481,26 +481,26 @@ const WorkHubPage: React.FC = () => {
       <div className={`workhub-content ${isVisible ? 'visible' : ''}`}>
         {/* Tab Navigation */}
         <div className="tab-navigation">
-          <button 
+          <button
             className={`tab-button ${activeTab === 'tareas' ? 'active' : ''}`}
             onClick={() => setActiveTab('tareas')}
           >
             <span>TAREAS</span>
           </button>
-          <button 
+          <button
             className={`tab-button ${activeTab === 'proyecto' ? 'active' : ''}`}
             onClick={() => setActiveTab('proyecto')}
           >
             <span>PROYECTO</span>
           </button>
         </div>
-        
+
         {/* Time Categories - Solo mostrar cuando el tab activo es 'tareas' */}
         {activeTab === 'tareas' && (
           <div className="time-categories">
             {timeCategories.map(category => (
-              <button 
-                key={category.id} 
+              <button
+                key={category.id}
                 className={`time-category ${selectedCategory === category.id ? 'active' : ''} ${getTaskCountForCategory(category.id) === 0 ? 'empty' : ''}`}
                 onClick={() => handleCategoryClick(category.id)}
               >
@@ -518,7 +518,7 @@ const WorkHubPage: React.FC = () => {
             ))}
           </div>
         )}
-        
+
         {/* Task Cards Grid - 20% más grande */}
         {activeTab === 'tareas' ? (
           <div className="task-cards-container">
@@ -530,10 +530,10 @@ const WorkHubPage: React.FC = () => {
                       <div className="task-card-section">{task.section || "Sin sección"}</div>
                       <div className="task-card-date">
                         <Calendar size={14} />
-                        <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString('es-ES', { 
+                        <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString('es-ES', {
                           year: 'numeric',
-                          month: 'short', 
-                          day: 'numeric' 
+                          month: 'short',
+                          day: 'numeric'
                         }) : 'Sin fecha'}</span>
                       </div>
                     </div>
@@ -569,7 +569,7 @@ const WorkHubPage: React.FC = () => {
               </div>
             ) : (
               <div className="project-table-wrapper">
-                <table className="project-table">
+                <table className="project-table" style={{ tableLayout: 'fixed' }}>
                   <thead>
                     <tr>
                       <th>Item</th>
@@ -624,149 +624,149 @@ const WorkHubPage: React.FC = () => {
                                   </button>
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'fase')}
-                                    placeholder="Fase" 
+                                    placeholder="Fase"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Fase')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'linea_estrategica')}
-                                    placeholder="Línea estratégica" 
+                                    placeholder="Línea estratégica"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Línea estratégica')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'microcampana')}
-                                    placeholder="Microcampaña" 
+                                    placeholder="Microcampaña"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Microcampaña')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'estatus')}
-                                    placeholder="Estatus" 
+                                    placeholder="Estatus"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Estatus')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'gerente')}
-                                    placeholder="Gerente" 
+                                    placeholder="Gerente"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Gerente')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'colaboradores')}
-                                    placeholder="Colaboradores" 
+                                    placeholder="Colaboradores"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Colaboradores')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'nombre_colaborador')}
-                                    placeholder="Nombre del colaborador" 
+                                    placeholder="Nombre del colaborador"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Nombre del colaborador')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'perfil_colaborador')}
-                                    placeholder="Perfil de colaborador" 
+                                    placeholder="Perfil de colaborador"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Perfil de colaborador')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'solicitud_entrega')}
-                                    placeholder="Solicitud y entrega" 
+                                    placeholder="Solicitud y entrega"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Solicitud y entrega')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'semana_curso')}
-                                    placeholder="Semana en curso" 
+                                    placeholder="Semana en curso"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Semana en curso')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'tipo_item')}
-                                    placeholder="Tipo de item" 
+                                    placeholder="Tipo de item"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Tipo de item')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'cantidad_v')}
-                                    placeholder="Cantidad V..." 
+                                    placeholder="Cantidad V..."
                                     readOnly
                                     onClick={() => openModal(item.id, 'Cantidad V...', 'number')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'cantidad_pr')}
-                                    placeholder="Cantidad Pr..." 
+                                    placeholder="Cantidad Pr..."
                                     readOnly
                                     onClick={() => openModal(item.id, 'Cantidad Pr...', 'number')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'cantidad_a')}
-                                    placeholder="Cantidad A..." 
+                                    placeholder="Cantidad A..."
                                     readOnly
                                     onClick={() => openModal(item.id, 'Cantidad A...', 'number')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="date" 
-                                    className="project-input" 
+                                  <input
+                                    type="date"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'fecha_finalizacion')}
                                     onChange={(e) => {
                                       const updatedValues = {
@@ -779,49 +779,49 @@ const WorkHubPage: React.FC = () => {
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'repositorio_co')}
-                                    placeholder="Repositorio de co..." 
+                                    placeholder="Repositorio de co..."
                                     readOnly
                                     onClick={() => openModal(item.id, 'Repositorio de co...')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'repositorio_firma')}
-                                    placeholder="Repositorio firma..." 
+                                    placeholder="Repositorio firma..."
                                     readOnly
                                     onClick={() => openModal(item.id, 'Repositorio firma...')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'enlace_repositorio')}
-                                    placeholder="Enlace de repositorio" 
+                                    placeholder="Enlace de repositorio"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Enlace de repositorio')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'desarrollo_creativo')}
-                                    placeholder="Desarrollo creativo" 
+                                    placeholder="Desarrollo creativo"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Desarrollo creativo')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="date" 
-                                    className="project-input" 
+                                  <input
+                                    type="date"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'fecha_testeo')}
                                     onChange={(e) => {
                                       const updatedValues = {
@@ -834,31 +834,31 @@ const WorkHubPage: React.FC = () => {
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'estatus_testeo')}
-                                    placeholder="Estatus testeo" 
+                                    placeholder="Estatus testeo"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Estatus testeo')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'entrega_cliente')}
-                                    placeholder="Entrega al cliente" 
+                                    placeholder="Entrega al cliente"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Entrega al cliente')}
                                   />
                                 </td>
                                 <td>
-                                  <input 
-                                    type="text" 
-                                    className="project-input" 
+                                  <input
+                                    type="text"
+                                    className="project-input"
                                     value={getFieldValue(item.id, 'nombre_archivo')}
-                                    placeholder="Nombre del archivo" 
+                                    placeholder="Nombre del archivo"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Nombre del archivo')}
                                   />
@@ -906,10 +906,10 @@ const WorkHubPage: React.FC = () => {
       <SelectAccountModalForWorkHub
         isOpen={showAccountModal}
         onClose={() => setShowAccountModal(false)}
-        onSelectAccount={handleSelectAccount} 
+        onSelectAccount={handleSelectAccount}
       />
 
-      <button 
+      <button
         className="logout-button"
         onClick={() => setShowLogoutDialog(true)}
         style={{
