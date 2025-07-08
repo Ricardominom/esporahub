@@ -119,10 +119,19 @@ const WorkHubPage: React.FC = () => {
   // Add horizontal scroll with mouse wheel
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (activeTab === 'proyecto' && projectTableContainerRef.current) {
+      const container = projectTableContainerRef.current;
+      if (activeTab === 'proyecto' && container) {
         if (e.deltaY !== 0) {
           e.preventDefault();
-          projectTableContainerRef.current.scrollLeft += e.deltaY;
+          
+          // Smoother scrolling with animation
+          const scrollAmount = e.deltaY * 1.2; // Adjust scroll speed
+          
+          // Use smooth scrolling
+          container.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+          });
         }
       }
     };
