@@ -120,30 +120,35 @@ const WorkHubPage: React.FC = () => {
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       const container = projectTableContainerRef.current;
-      if (activeTab === 'proyecto' && container && e.deltaY !== 0) {
-        // Check if we're hovering over the table
-        const rect = container.getBoundingClientRect();
-        const isOverTable = 
-          e.clientX >= rect.left && 
-          e.clientX <= rect.right && 
-          e.clientY >= rect.top && 
-          e.clientY <= rect.bottom;
-          
-        if (isOverTable) {
+      if (activeTab === 'proyecto' && container) {
+        if (e.deltaY !== 0) {
           e.preventDefault();
           
-          // Use direct scrollLeft for smoother performance
-          const scrollAmount = e.deltaY * 2;
-          container.scrollLeft += scrollAmount;
+          // Smoother scrolling with animation
+          const scrollAmount = e.deltaY * 1.2; // Adjust scroll speed
+          
+          // Use smooth scrolling
+          container.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+          });
         }
       }
     };
     
-    // Add the event listener to the document
-    document.addEventListener('wheel', handleWheel, { passive: false });
+    // Only add the event listener when the proyecto tab is active
+    if (activeTab === 'proyecto') {
+      const projectTable = projectTableContainerRef.current;
+      if (projectTable) {
+        projectTable.addEventListener('wheel', handleWheel, { passive: false });
+      }
+    }
     
     return () => {
-      document.removeEventListener('wheel', handleWheel);
+      const projectTable = projectTableContainerRef.current;
+      if (projectTable) {
+        projectTable.removeEventListener('wheel', handleWheel);
+      }
     };
   }, [activeTab]);
 
@@ -603,22 +608,10 @@ const WorkHubPage: React.FC = () => {
               </div>
             ) : (
               <div className="project-table-wrapper" ref={projectTableContainerRef}>
-                <table className="project-table" style={{ 
-                  tableLayout: 'fixed', 
-                  margin: '0', 
-                  borderCollapse: 'separate', 
-                  borderSpacing: '0px',
-                  position: 'relative'
-                }}>
+                <table className="project-table" style={{ tableLayout: 'fixed', marginLeft: '0' }}>
                   <thead>
                     <tr>
-                      <th style={{ 
-                        width: '180px', 
-                        minWidth: '180px', 
-                        position: 'sticky', 
-                        left: 0, 
-                        zIndex: 15 
-                      }}>Item</th>
+                      <th style={{ width: '180px', minWidth: '180px' }}>Item</th>
                       <th style={{ width: '80px', minWidth: '80px' }}>Subele...</th>
                       <th style={{ width: '120px', minWidth: '120px' }}>Fase</th>
                       <th style={{ width: '150px', minWidth: '150px' }}>Línea estratégica</th>
@@ -660,12 +653,7 @@ const WorkHubPage: React.FC = () => {
                             </tr>
                             {items.map((item) => (
                               <tr key={item.id} className={item.completed ? "completed-item" : ""}>
-                                <td className="item-code-cell" style={{ 
-                                  width: '180px', 
-                                  minWidth: '180px',
-                                  position: 'sticky',
-                                  left: 0
-                                }}>
+                                <td className="item-code-cell" style={{ width: '180px', minWidth: '180px' }}>
                                   <div className="item-code">{item.id}</div>
                                   <div className="item-concept-cell">{item.concept}</div>
                                 </td>

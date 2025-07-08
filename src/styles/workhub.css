@@ -800,12 +800,11 @@
 .project-table-container {
   width: 100%;
   height: 480px;
-  overflow: hidden !important;
+  overflow-x: auto;
+  overflow-y: auto;
+  scroll-behavior: smooth;
   border-radius: 16px;
   transition: all 0.3s ease;
-  position: relative;
-  z-index: 5;
-  background-color: inherit;
   scrollbar-width: thin;
   -ms-overflow-style: auto;
   display: flex;
@@ -839,13 +838,11 @@
   text-align: left;
   transition: color 0.3s ease;
   padding: 0.5rem 0.75rem;
-  min-width: 180px;
-  max-width: 180px;
+  min-width: 200px;
+  max-width: 200px;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  z-index: 10;
-  position: relative;
 }
 
 .item-code {
@@ -880,12 +877,6 @@
   line-height: 1.3;
   transition: color 0.3s ease;
   padding: 0;
-  max-width: 160px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
 }
 
 /* Dark theme item concept */
@@ -1164,10 +1155,11 @@
 .project-table-wrapper {
   width: 100%;
   height: 100%;
-  overflow: auto !important;
+  overflow-x: auto;
+  overflow-y: auto; 
   padding: 0.25rem 0.25rem 1rem 0.25rem;
+  scroll-behavior: smooth;
   position: relative;
-  contain: strict;
 }
 
 .project-table {
@@ -1175,7 +1167,7 @@
   border-collapse: separate;
   border-spacing: 0;
   font-size: 0.8rem;
-  background: none;
+  background: transparent;
   min-width: 2500px;
   margin: 0 auto;
 }
@@ -1211,83 +1203,112 @@
 /* Fixed Item column */
 .project-table thead th:first-child,
 .project-table tbody td:first-child {
-  position: sticky !important;
+  position: sticky;
   left: 0;
-  z-index: 10 !important;
+  z-index: 10;
+  transition: box-shadow 0.3s ease;
 }
 
 /* Dark theme fixed column */
 .workhub-page.dark-theme .project-table thead th:first-child {
-  background-color: #1a1a24 !important;
-  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(180deg, 
+    rgba(30, 30, 40, 0.98) 0%, 
+    rgba(20, 20, 30, 0.95) 100%
+  );
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.12);
 }
 
 .workhub-page.dark-theme .project-table tbody td:first-child {
-  background-color: #0a0514 !important;
-  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+  background: rgba(26, 11, 46, 0.95);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.12);
 }
 
 /* Light theme fixed column */
 .workhub-page.light-theme .project-table thead th:first-child {
-  background-color: #f8fafc !important;
-  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(180deg, 
+    rgba(248, 250, 252, 0.98) 0%, 
+    rgba(241, 245, 249, 0.95) 100%
+  );
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
 }
 
 .workhub-page.light-theme .project-table tbody td:first-child {
-  background-color: #ffffff !important;
-  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
 }
 
 /* Ensure section headers maintain their style */
 .workhub-page.dark-theme .project-table .section-header td:first-child {
-  background-color: rgba(88, 51, 139, 0.3) !important;
-  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.4) 0%, 
+    rgba(26, 11, 46, 0.45) 25%, 
+    rgba(88, 51, 139, 0.35) 50%, 
+    rgba(147, 112, 219, 0.3) 75%, 
+    rgba(88, 51, 139, 0.35) 100%
+  ) !important;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.12);
 }
 
 .workhub-page.light-theme .project-table .section-header td:first-child {
-  background-color: rgba(1, 113, 226, 0.1) !important;
-  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, 
+    rgba(248, 250, 252, 0.7) 0%, 
+    rgba(241, 245, 249, 0.75) 25%, 
+    rgba(226, 232, 240, 0.7) 50%, 
+    rgba(203, 213, 225, 0.65) 75%, 
+    rgba(226, 232, 240, 0.7) 100%
+  ) !important;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
 }
 
 /* Add a subtle fade effect to indicate scrollable content */
 .project-table-wrapper::after {
-  display: none;
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 30px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05));
+  z-index: 5;
+  opacity: 0.7;
 }
 
 /* Dark theme fade effect */
 .workhub-page.dark-theme .project-table-wrapper::after {
-  display: none;
-}
-
-/* Prevent content from showing through during scroll */
-.project-table-wrapper {
-/* Ensure cells have solid backgrounds to prevent content bleed */
-.project-table td {
-  position: relative;
-  z-index: 1;
-  isolation: isolate;
-}
-
-/* Dark theme table cells with more solid background */
-.workhub-page.dark-theme .project-table td {
-  background-color: #0a0514 !important;
-}
-
-/* Light theme table cells with more solid background */
-.workhub-page.light-theme .project-table td {
-  background-color: #ffffff !important;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.2));
 }
 
 /* Dark theme table header */
 .workhub-page.dark-theme .project-table thead th {
-  background-color: #1a1a24 !important;
+  background: linear-gradient(180deg, 
+    rgba(30, 30, 40, 0.98) 0%, 
+    rgba(20, 20, 30, 0.95) 100%
+  );
   color: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(60, 60, 80, 0.8);
+  border-right: 1px solid rgba(60, 60, 80, 0.4);
+  border-top: 1px solid rgba(80, 80, 100, 0.6);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 /* Light theme table header */
 .workhub-page.light-theme .project-table thead th {
-  background-color: #f8fafc !important;
+  background: linear-gradient(180deg, 
+    rgba(248, 250, 252, 0.98) 0%, 
+    rgba(241, 245, 249, 0.95) 100%
+  );
   color: #1a202c;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  text-shadow: none;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .project-table tbody tr {
