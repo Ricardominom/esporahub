@@ -748,7 +748,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 480px;
   width: 100%;
 }
 
@@ -800,15 +800,14 @@
 .project-table-container {
   width: 100%;
   height: 480px;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: auto;
   border-radius: 16px;
   transition: all 0.3s ease;
   scrollbar-width: thin;
   -ms-overflow-style: auto;
   display: flex;
   flex-direction: column;
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
 }
 
 /* Dark theme project table container */
@@ -1155,9 +1154,9 @@
 .project-table-wrapper {
   width: 100%;
   height: 100%;
-  overflow: visible;
+  overflow-x: auto;
+  overflow-y: auto;
   padding: 1rem;
-  padding-bottom: 0;
 }
 
 .project-table {
@@ -1405,7 +1404,7 @@
 .empty-project-message {
   text-align: center;
   padding: 0;
-  height: 100%;
+  height: 480px;
   display: flex;
   align-items: center;
   justify-content: center;
