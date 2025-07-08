@@ -487,6 +487,7 @@
 /* Task Cards Container */
 .task-cards-container {
   width: 100%;
+  margin-top: 10px;
   max-width: 1440px;
   padding: 1.5rem;
   border-radius: 16px;
