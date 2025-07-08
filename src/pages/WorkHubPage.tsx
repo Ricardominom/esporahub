@@ -64,6 +64,9 @@ const WorkHubPage: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(() =>
     document.body.classList.contains('dark-theme')
   );
+  
+  // Ref for project table container
+  const projectTableContainerRef = React.useRef<HTMLDivElement>(null);
 
   // Listen for theme changes
   useEffect(() => {
@@ -112,6 +115,33 @@ const WorkHubPage: React.FC = () => {
     // Cargar datos inicialmente
     loadData();
   }, [user, selectedAccount]);
+
+  // Add horizontal scroll with mouse wheel
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      if (activeTab === 'proyecto' && projectTableContainerRef.current) {
+        if (e.deltaY !== 0) {
+          e.preventDefault();
+          projectTableContainerRef.current.scrollLeft += e.deltaY;
+        }
+      }
+    };
+    
+    // Only add the event listener when the proyecto tab is active
+    if (activeTab === 'proyecto') {
+      const projectTable = projectTableContainerRef.current;
+      if (projectTable) {
+        projectTable.addEventListener('wheel', handleWheel, { passive: false });
+      }
+    }
+    
+    return () => {
+      const projectTable = projectTableContainerRef.current;
+      if (projectTable) {
+        projectTable.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, [activeTab]);
 
   // Combine project items and task assignments for the project tab
   useEffect(() => {
@@ -568,7 +598,7 @@ const WorkHubPage: React.FC = () => {
                 <p>Cargando datos de la cuenta...</p>
               </div>
             ) : (
-              <div className="project-table-wrapper">
+              <div className="project-table-wrapper" ref={projectTableContainerRef}>
                 <table className="project-table" style={{ tableLayout: 'fixed' }}>
                   <thead>
                     <tr>

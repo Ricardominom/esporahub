@@ -802,6 +802,7 @@
   height: 480px;
   overflow-x: auto;
   overflow-y: auto;
+  scroll-behavior: smooth;
   border-radius: 16px;
   transition: all 0.3s ease;
   scrollbar-width: thin;
@@ -1155,8 +1156,9 @@
   width: 100%;
   height: 100%;
   overflow-x: auto;
-  overflow-y: auto;
+  overflow-y: auto; 
   padding: 1rem;
+  scroll-behavior: smooth;
 }
 
 .project-table {
