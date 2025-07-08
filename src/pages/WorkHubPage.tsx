@@ -608,10 +608,10 @@ const WorkHubPage: React.FC = () => {
               </div>
             ) : (
               <div className="project-table-wrapper" ref={projectTableContainerRef}>
-                <table className="project-table" style={{ tableLayout: 'fixed' }}>
+                <table className="project-table" style={{ tableLayout: 'fixed', marginLeft: '0' }}>
                   <thead>
                     <tr>
-                      <th style={{ width: '200px', minWidth: '200px' }}>Item</th>
+                      <th style={{ width: '180px', minWidth: '180px' }}>Item</th>
                       <th style={{ width: '80px', minWidth: '80px' }}>Subele...</th>
                       <th style={{ width: '120px', minWidth: '120px' }}>Fase</th>
                       <th style={{ width: '150px', minWidth: '150px' }}>Línea estratégica</th>
@@ -653,7 +653,7 @@ const WorkHubPage: React.FC = () => {
                             </tr>
                             {items.map((item) => (
                               <tr key={item.id} className={item.completed ? "completed-item" : ""}>
-                                <td className="item-code-cell">
+                                <td className="item-code-cell" style={{ width: '180px', minWidth: '180px' }}>
                                   <div className="item-code">{item.id}</div>
                                   <div className="item-concept-cell">{item.concept}</div>
                                 </td>
