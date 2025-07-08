@@ -646,8 +646,8 @@ const WorkHubPage: React.FC = () => {
 
                         return (
                           <React.Fragment key={sectionName}>
-                            <tr className="section-header" style={{ position: 'relative' }}>
-                              <td colSpan={26} className="section-title" style={{ position: 'sticky', left: 0, zIndex: 10 }}>
+                            <tr className="section-header">
+                              <td colSpan={26} className="section-title">
                                 {sectionName}
                               </td>
                             </tr>
