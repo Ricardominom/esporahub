@@ -487,6 +487,7 @@
 /* Task Cards Container */
 .task-cards-container {
   width: 100%;
+  min-height: 485px;
   max-width: 1440px;
   padding: 1.5rem;
   border-radius: 16px;
@@ -511,7 +512,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
-  min-height: 300px;
+  min-height: 405px;
 }
 
 .task-card {
