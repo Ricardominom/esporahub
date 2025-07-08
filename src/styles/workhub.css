@@ -1179,8 +1179,6 @@
   text-align: left;
   padding: 1rem 0.5rem;
   font-size: 0.7rem;
-  position: sticky;
-  top: 0;
   z-index: 15;
   white-space: normal;
   word-wrap: break-word;
@@ -1204,19 +1202,18 @@
 /* Fixed Item column */
 .project-table thead th:first-child,
 .project-table tbody td:first-child {
-  position: sticky;
   left: 0;
-  z-index: 10;
   transition: box-shadow 0.3s ease;
 }
 
 /* Dark theme fixed column */
 .workhub-page.dark-theme .project-table thead th:first-child {
   background: linear-gradient(180deg, 
-    rgba(30, 30, 40, 0.98) 0%, 
-    rgba(20, 20, 30, 0.95) 100%
+    rgba(30, 30, 40, 1) 0%, 
+    rgba(20, 20, 30, 1) 100%
   );
   box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 25;
 }
 
 .workhub-page.dark-theme .project-table tbody td:first-child {
@@ -1227,10 +1224,11 @@
 /* Light theme fixed column */
 .workhub-page.light-theme .project-table thead th:first-child {
   background: linear-gradient(180deg, 
-    rgba(248, 250, 252, 0.98) 0%, 
-    rgba(241, 245, 249, 0.95) 100%
+    rgba(248, 250, 252, 1) 0%, 
+    rgba(241, 245, 249, 1) 100%
   );
   box-shadow: 1px 0 5px rgba(0, 0, 0, 0.03);
+  z-index: 25;
 }
 
 .workhub-page.light-theme .project-table tbody td:first-child {
@@ -1283,8 +1281,8 @@
 /* Dark theme table header */
 .workhub-page.dark-theme .project-table thead th {
   background: linear-gradient(180deg, 
-    rgba(30, 30, 40, 0.98) 0%, 
-    rgba(20, 20, 30, 0.95) 100%
+    rgba(30, 30, 40, 1) 0%, 
+    rgba(20, 20, 30, 1) 100%
   );
   color: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid rgba(60, 60, 80, 0.8);
@@ -1299,8 +1297,8 @@
 /* Light theme table header */
 .workhub-page.light-theme .project-table thead th {
   background: linear-gradient(180deg, 
-    rgba(248, 250, 252, 0.98) 0%, 
-    rgba(241, 245, 249, 0.95) 100%
+    rgba(248, 250, 252, 1) 0%, 
+    rgba(241, 245, 249, 1) 100%
   );
   color: #1a202c;
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
