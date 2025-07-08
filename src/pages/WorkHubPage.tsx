@@ -607,8 +607,8 @@ const WorkHubPage: React.FC = () => {
                 <p>Cargando datos de la cuenta...</p>
               </div>
             ) : (
-              <div className="project-table-wrapper" ref={projectTableContainerRef} style={{ padding: '0', margin: '0', overflow: 'auto' }}>
-                <table className="project-table" style={{ tableLayout: 'fixed', margin: '0', borderSpacing: '0', borderCollapse: 'separate' }}>
+              <div className="project-table-wrapper" ref={projectTableContainerRef} style={{ padding: '0' }}>
+                <table className="project-table" style={{ tableLayout: 'fixed', marginLeft: '0', borderSpacing: '0' }}>
                   <thead>
                     <tr>
                       <th style={{ width: '180px', minWidth: '180px' }}>Item</th>
