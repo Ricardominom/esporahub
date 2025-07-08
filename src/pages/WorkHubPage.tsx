@@ -119,19 +119,24 @@ const WorkHubPage: React.FC = () => {
   // Add horizontal scroll with mouse wheel
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      const container = projectTableContainerRef.current;
-      if (activeTab === 'proyecto' && container) {
-        if (e.deltaY !== 0) {
-          e.preventDefault();
-          
-          // Smoother scrolling with animation
-          const scrollAmount = e.deltaY * 1.2; // Adjust scroll speed
-          
-          // Use smooth scrolling
-          container.scrollBy({
-            left: scrollAmount,
-            behavior: 'smooth'
-          });
+      if (activeTab === 'proyecto') {
+        const container = projectTableContainerRef.current;
+        if (container && e.deltaY !== 0) {
+          // Check if we're hovering over the table
+          const rect = container.getBoundingClientRect();
+          const isOverTable = 
+            e.clientX >= rect.left && 
+            e.clientX <= rect.right && 
+            e.clientY >= rect.top && 
+            e.clientY <= rect.bottom;
+            
+          if (isOverTable) {
+            e.preventDefault();
+            
+            // Use direct scrollLeft for smoother performance
+            const scrollAmount = e.deltaY * 1.5;
+            container.scrollLeft += scrollAmount;
+          }
         }
       }
     };
@@ -608,7 +613,7 @@ const WorkHubPage: React.FC = () => {
               </div>
             ) : (
               <div className="project-table-wrapper" ref={projectTableContainerRef}>
-                <table className="project-table" style={{ tableLayout: 'fixed', marginLeft: '0' }}>
+                <table className="project-table" style={{ tableLayout: 'fixed', marginLeft: '0', borderCollapse: 'separate', borderSpacing: '0' }}>
                   <thead>
                     <tr>
                       <th style={{ width: '180px', minWidth: '180px' }}>Item</th>
