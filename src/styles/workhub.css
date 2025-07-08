@@ -1202,7 +1202,13 @@
 }
 
 /* Fixed Item column */
-.project-table thead th:first-child,
+.project-table thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 20;
+  transition: box-shadow 0.3s ease;
+}
+
 .project-table tbody td:first-child {
   position: sticky;
   left: 0;
@@ -1219,6 +1225,15 @@
   box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
 }
 
+.workhub-page.dark-theme .project-table thead th:first-child {
+  background: linear-gradient(180deg, 
+    rgba(30, 30, 40, 0.98) 0%, 
+    rgba(20, 20, 30, 0.95) 100%
+  );
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+}
+
 .workhub-page.dark-theme .project-table tbody td:first-child {
   background: rgba(26, 11, 46, 0.95);
   box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
@@ -1231,6 +1246,15 @@
     rgba(241, 245, 249, 0.95) 100%
   );
   box-shadow: 1px 0 5px rgba(0, 0, 0, 0.03);
+}
+
+.workhub-page.light-theme .project-table thead th:first-child {
+  background: linear-gradient(180deg, 
+    rgba(248, 250, 252, 0.98) 0%, 
+    rgba(241, 245, 249, 0.95) 100%
+  );
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.03);
+  z-index: 20;
 }
 
 .workhub-page.light-theme .project-table tbody td:first-child {
