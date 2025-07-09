@@ -89,7 +89,6 @@ const ItemDetailPage: React.FC = () => {
   return (
     <div className={`item-detail-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <MenuBackground />
-      
       <div className="item-detail-header">
         <div className="item-detail-breadcrumb-container">
           <span className="item-detail-breadcrumb-separator">/</span>
@@ -120,7 +119,7 @@ const ItemDetailPage: React.FC = () => {
       <div className={`item-detail-content ${isVisible ? 'visible' : ''}`}>
         <div className="item-detail-layout">
           {/* Left side - Item information */}
-          <div className="item-info-section">
+          <div className="item-info-section" style={{ minHeight: '600px' }}>
             <h2 className="section-title">{item?.section || 'Sección'}</h2>
             <div className="item-description">
               <h3>Estrategia</h3>
@@ -198,15 +197,6 @@ const ItemDetailPage: React.FC = () => {
           </div>
         </div>
       </div>
-
-      <button 
-        className="logout-button"
-        onClick={() => setShowLogoutDialog(true)}
-      >
-        <LogOut size={16} />
-        <span>Cerrar sesión</span>
-      </button>
-
       <LogoutDialog
         isOpen={showLogoutDialog}
         onClose={() => setShowLogoutDialog(false)}

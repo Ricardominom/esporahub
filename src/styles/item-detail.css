@@ -242,8 +242,10 @@
 .item-info-section {
   padding: 2rem;
   border-radius: 16px;
-  transition: all 0.3s ease;
-  height: fit-content;
+  transition: all 0.3s ease; 
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Dark theme item info section */
@@ -287,7 +289,8 @@
 
 .item-description {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
+  flex: 1;
   gap: 1rem;
 }
 
@@ -465,6 +468,7 @@
   position: relative;
   overflow: hidden;
   min-height: 600px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
