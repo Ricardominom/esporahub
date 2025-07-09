@@ -11,6 +11,7 @@ import AccountPage from './pages/AccountPage';
 import ConstructionPage from './pages/ConstructionPage';
 import ChecklistCapturaPage from './pages/ChecklistCapturaPage';
 import SelectAccountPage from './pages/SelectAccountPage';
+import ItemDetailPage from './pages/ItemDetailPage';
 import ClientDashboardPage from './pages/ClientDashboardPage';
 import ActiveAccountsPage from './pages/ActiveAccountsPage';
 import InactiveAccountsPage from './pages/InactiveAccountsPage';
@@ -109,6 +110,11 @@ const AnimatedRoutes = () => {
           <Route path="/workhub" element={
             <ProtectedRoute>
               <WorkHubPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/item-detail" element={
+            <ProtectedRoute>
+              <ItemDetailPage />
             </ProtectedRoute>
           } />
         </Routes>

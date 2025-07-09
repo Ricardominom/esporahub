@@ -654,8 +654,32 @@ const WorkHubPage: React.FC = () => {
                             {items.map((item) => (
                               <tr key={item.id} className={item.completed ? "completed-item" : ""}>
                                 <td className="item-code-cell" style={{ width: '180px', minWidth: '180px' }}>
-                                  <div className="item-code">{item.id}</div>
-                                  <div className="item-concept-cell">{item.concept}</div>
+                                  <div 
+                                    className="item-code" 
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => navigate('/item-detail', { 
+                                      state: { 
+                                        item: {
+                                          id: item.id,
+                                          concept: item.concept,
+                                          section: item.section
+                                        }
+                                      }
+                                    })}
+                                  >{item.id}</div>
+                                  <div 
+                                    className="item-concept-cell" 
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => navigate('/item-detail', { 
+                                      state: { 
+                                        item: {
+                                          id: item.id,
+                                          concept: item.concept,
+                                          section: item.section
+                                        }
+                                      }
+                                    })}
+                                  >{item.concept}</div>
                                 </td>
                                 <td>
                                   <button className="project-action-btn upload-btn">
