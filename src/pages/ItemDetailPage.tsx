@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, Upload, FileText, Download, Trash2, Eye, Edit2, CheckCircle } from 'lucide-react';
+import { LogOut, Upload, FileText, Download, Trash2, Eye, Edit2, CheckSquare, Square } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import MenuBackground from '../components/MenuBackground';
 import LogoutDialog from '../components/LogoutDialog';
@@ -24,6 +24,7 @@ const ItemDetailPage: React.FC = () => {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFiles, setUploadedFiles] = useState<{file: File, id: string}[]>([]);
+  const [isCompleted, setIsCompleted] = useState(false);
   
   // Listen for theme changes
   useEffect(() => {
@@ -161,9 +162,12 @@ const ItemDetailPage: React.FC = () => {
                   <span>Descargar plantilla</span>
                 </button>
                 
-                <button className="complete-item-button">
-                  <CheckCircle size={16} />
-                  <span>Marcar como completado</span>
+                <button 
+                  className={`complete-item-button ${isCompleted ? 'completed' : ''}`}
+                  onClick={() => setIsCompleted(!isCompleted)}
+                >
+                  {isCompleted ? <CheckSquare size={16} /> : <Square size={16} />}
+                  <span>{isCompleted ? 'Completado' : 'Marcar como completado'}</span>
                 </button>
               </div>
             </div>

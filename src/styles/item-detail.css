@@ -431,6 +431,25 @@
   box-shadow: 0 8px 24px rgba(34, 197, 94, 0.15);
 }
 
+/* Completed state */
+.item-detail-page.dark-theme .complete-item-button.completed {
+  background: rgba(34, 197, 94, 0.4);
+  border-color: rgba(34, 197, 94, 0.6);
+  color: white;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+}
+
+.item-detail-page.light-theme .complete-item-button.completed {
+  background: rgba(34, 197, 94, 0.3);
+  border-color: rgba(34, 197, 94, 0.5);
+  color: white;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
+}
+
+.item-detail-page.light-theme .complete-item-button.completed span {
+  color: white;
+}
+
 /* Item Upload Section */
 .item-upload-section {
   display: flex;
