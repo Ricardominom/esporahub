@@ -120,9 +120,9 @@ const ItemDetailPage: React.FC = () => {
       <div className={`item-detail-content ${isVisible ? 'visible' : ''}`}>
         <div className="item-detail-layout">
           {/* Left side - Item information */}
-          <div className="item-info-section">
+          <div className="item-info-section" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <h2 className="section-title">{item?.section || 'Sección'}</h2>
-            <div className="item-description">
+            <div className="item-description" style={{ flex: 1 }}>
               <h3>Estrategia</h3>
               <p>
                 El análisis de Humor Social es un reporte que analiza los sentimientos 
