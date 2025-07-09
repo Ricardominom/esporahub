@@ -64,6 +64,8 @@ const WorkHubPage: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(() =>
     document.body.classList.contains('dark-theme')
   );
+  // Ref for horizontal scroll indicator
+  const horizontalScrollIndicatorRef = React.useRef<HTMLDivElement>(null);
   
   // Ref for project table container
   const projectTableContainerRef = React.useRef<HTMLDivElement>(null);
@@ -116,11 +118,32 @@ const WorkHubPage: React.FC = () => {
     loadData();
   }, [user, selectedAccount]);
 
-  // Add horizontal scroll with mouse wheel
+  // Sync scroll between table and scroll indicator
   useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      const container = projectTableContainerRef.current;
-      if (activeTab === 'proyecto' && container) {
+    const projectTable = projectTableContainerRef.current;
+    const scrollIndicator = horizontalScrollIndicatorRef.current;
+    
+    if (activeTab === 'proyecto' && projectTable && scrollIndicator) {
+      // Function to handle scroll synchronization
+      const handleTableScroll = () => {
+        if (scrollIndicator) {
+          scrollIndicator.scrollLeft = projectTable.scrollLeft;
+        }
+      };
+      
+      // Function to handle indicator scroll
+      const handleIndicatorScroll = () => {
+        if (projectTable) {
+          projectTable.scrollLeft = scrollIndicator.scrollLeft;
+        }
+      };
+      
+      // Add event listeners
+      projectTable.addEventListener('scroll', handleTableScroll);
+      scrollIndicator.addEventListener('scroll', handleIndicatorScroll);
+      
+      // Add wheel event for horizontal scrolling
+      const handleWheel = (e: WheelEvent) => {
         if (e.deltaY !== 0) {
           e.preventDefault();
           
@@ -128,28 +151,22 @@ const WorkHubPage: React.FC = () => {
           const scrollAmount = e.deltaY * 1.2; // Adjust scroll speed
           
           // Use smooth scrolling
-          container.scrollBy({
+          projectTable.scrollBy({
             left: scrollAmount,
             behavior: 'smooth'
           });
         }
-      }
-    };
-    
-    // Only add the event listener when the proyecto tab is active
-    if (activeTab === 'proyecto') {
-      const projectTable = projectTableContainerRef.current;
-      if (projectTable) {
-        projectTable.addEventListener('wheel', handleWheel, { passive: false });
-      }
-    }
-    
-    return () => {
-      const projectTable = projectTableContainerRef.current;
-      if (projectTable) {
+      };
+      
+      projectTable.addEventListener('wheel', handleWheel, { passive: false });
+      
+      // Cleanup
+      return () => {
+        projectTable.removeEventListener('scroll', handleTableScroll);
+        scrollIndicator.removeEventListener('scroll', handleIndicatorScroll);
         projectTable.removeEventListener('wheel', handleWheel);
       }
-    };
+    }
   }, [activeTab]);
 
   // Combine project items and task assignments for the project tab
@@ -601,6 +618,40 @@ const WorkHubPage: React.FC = () => {
           </div>
         ) : (
           <div className="project-table-container">
+            {/* Horizontal scroll indicator */}
+            <div 
+              ref={horizontalScrollIndicatorRef}
+              className="horizontal-scroll-indicator"
+              style={{
+                width: '100%',
+                height: '12px',
+                overflowX: 'auto',
+                overflowY: 'hidden',
+                marginBottom: '8px',
+                borderRadius: '6px',
+                position: 'relative',
+                zIndex: 16,
+                ...(isDarkMode 
+                  ? {
+                      background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(26, 11, 46, 0.4) 50%, rgba(0, 0, 0, 0.3) 100%)',
+                      border: '1px solid rgba(147, 112, 219, 0.1)'
+                    } 
+                  : {
+                      background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.05) 100%)',
+                      border: '1px solid rgba(0, 0, 0, 0.1)'
+                    })
+              }}
+            >
+              <div 
+                className="scroll-content" 
+                style={{ 
+                  height: '1px', 
+                  minWidth: '2500px', // Same width as the table
+                  background: 'transparent' 
+                }}
+              />
+            </div>
+            
             {isLoading ? (
               <div className="project-loading-state">
                 <div className="loading-spinner"></div>
