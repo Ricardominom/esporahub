@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Download, Upload, FileText } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import MenuBackground from '../components/MenuBackground';
-import LogoutDialog from '../components/LogoutDialog';
 import '../styles/item-detail.css';
 
 interface ItemDetailProps {
@@ -196,7 +195,6 @@ const ItemDetailPage: React.FC = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };
