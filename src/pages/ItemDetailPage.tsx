@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Download, Upload, FileText, Trash2 } from 'lucide-react';
+import { LogOut, Download, Upload, FileText, Trash2 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import MenuBackground from '../components/MenuBackground';
 import LogoutDialog from '../components/LogoutDialog';
@@ -24,7 +24,6 @@ const ItemDetailPage: React.FC = () => {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFiles, setUploadedFiles] = useState<{file: File, id: string}[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
   
   // Listen for theme changes
   useEffect(() => {
@@ -51,7 +50,6 @@ const ItemDetailPage: React.FC = () => {
   }, [location]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsUploading(true);
     const selectedFiles = event.target.files;
     if (selectedFiles && selectedFiles.length > 0) {
       const newFiles = Array.from(selectedFiles);
@@ -60,7 +58,6 @@ const ItemDetailPage: React.FC = () => {
         id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
       }));
       setUploadedFiles(prev => [...prev, ...filesWithIds]);
-      setTimeout(() => setIsUploading(false), 500);
     }
   };
 
@@ -68,7 +65,6 @@ const ItemDetailPage: React.FC = () => {
     e.preventDefault();
     setIsDragOver(true);
   };
-
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
@@ -78,7 +74,6 @@ const ItemDetailPage: React.FC = () => {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    setIsUploading(true);
     
     const droppedFiles = e.dataTransfer.files;
     if (droppedFiles && droppedFiles.length > 0) {
@@ -87,18 +82,11 @@ const ItemDetailPage: React.FC = () => {
         id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
       }));
       setUploadedFiles(prev => [...prev, ...newFiles]);
-      setTimeout(() => setIsUploading(false), 500);
     }
   };
   
   const handleDeleteFile = (fileId: string) => {
     setUploadedFiles(prev => prev.filter(fileObj => fileObj.id !== fileId));
-  };
-
-  const handleBulkDelete = () => {
-    if (uploadedFiles.length > 0 && confirm('¿Estás seguro de eliminar todos los archivos?')) {
-      setUploadedFiles([]);
-    }
   };
 
   const formatFileSize = (bytes: number): string => {
@@ -108,7 +96,6 @@ const ItemDetailPage: React.FC = () => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
-
 
   return (
     <div className={`item-detail-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
@@ -144,7 +131,7 @@ const ItemDetailPage: React.FC = () => {
       <div className={`item-detail-content ${isVisible ? 'visible' : ''}`}>
         <div className="item-detail-layout">
           {/* Left side - Item information */}
-          <div className="item-info-section" style={{ height: 'fit-content', display: 'flex', flexDirection: 'column' }}>
+          <div className="item-info-section" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <h2 className="section-title">{item?.section || 'Sección'}</h2>
             <div className="item-description" style={{ flex: 1 }}>
               <h3>Estrategia</h3>
@@ -175,7 +162,7 @@ const ItemDetailPage: React.FC = () => {
           </div>
           
           {/* Right side - Drag & Drop area */}
-          <div className="item-upload-section" style={{ height: 'fit-content' }}>
+          <div className="item-upload-section">
             <div 
               className={`upload-area ${isDragOver ? 'drag-over' : ''}`}
               onDragOver={handleDragOver}
@@ -183,7 +170,7 @@ const ItemDetailPage: React.FC = () => {
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
             >
-              <div className={`upload-icon ${isUploading ? 'uploading' : ''}`}>
+              <div className="upload-icon">
                 <Upload size={48} />
               </div>
               <h3>DRAG AND DROP</h3>
@@ -202,16 +189,8 @@ const ItemDetailPage: React.FC = () => {
             
             {uploadedFiles.length > 0 && (
               <div className="uploaded-files">
-                <div className="uploaded-files-header">
-                  <h3>Archivos subidos ({uploadedFiles.length})</h3>
-                  {uploadedFiles.length > 1 && (
-                    <button className="bulk-delete-btn" onClick={handleBulkDelete} title="Eliminar todos">
-                      <Trash2 size={14} />
-                      <span>Eliminar todos</span>
-                    </button>
-                  )}
-                </div>
-                <div className="files-list" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                <h3>Archivos subidos ({uploadedFiles.length})</h3>
+                <div className="files-list">
                   {uploadedFiles.map((fileObj) => (
                     <div key={fileObj.id} className="file-item">
                       <div className="file-icon">
@@ -241,6 +220,13 @@ const ItemDetailPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <LogoutDialog
+        isOpen={showLogoutDialog}
+        onClose={() => setShowLogoutDialog(false)}
+      />
     </div>
   );
 };
+
+export default ItemDetailPage;
