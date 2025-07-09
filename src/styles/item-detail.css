@@ -449,10 +449,8 @@
 .item-upload-section {
   display: flex;
   flex-direction: column; 
-  height: 100% !important;
-  min-height: 450px !important;
-  animation: none !important;
-  transition: none !important;
+  height: 100%;
+  min-height: 450px;
 }
 
 /* Upload Area */
@@ -468,12 +466,10 @@
   position: relative;
   overflow: hidden;
   flex: 1;
-  min-height: 450px !important;
+  min-height: 450px;
   height: 100%;
   display: flex;
   flex-direction: column;
-  animation: none !important;
-  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease !important;
   justify-content: center;
   align-items: center;
 }
@@ -826,7 +822,7 @@
   
   .upload-area {
     padding: 3rem 1.5rem;
-    min-height: 350px !important;
+    min-height: 350px;
   }
   
   .upload-area h3 {
@@ -849,7 +845,7 @@
   
   .upload-area {
     padding: 2rem 1.5rem;
-    min-height: 300px !important;
+    min-height: 300px;
   }
   
   .upload-area h3 {
