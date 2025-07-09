@@ -730,7 +730,7 @@
 /* Horizontal scroll indicator styles */
 .horizontal-scroll-indicator {
   width: 100%;
-  height: 12px;
+  height: 14px;
   overflow-x: auto;
   overflow-y: hidden;
   margin-bottom: 8px;
@@ -738,8 +738,9 @@
   position: relative;
   z-index: 16;
   scrollbar-width: thin;
-  will-change: transform; /* Optimize for animations */
+  will-change: scroll-position; /* Optimize for animations */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  overscroll-behavior-x: none; /* Prevent overscroll effects */
 }
 
 /* Dark theme horizontal scroll indicator */
@@ -763,7 +764,7 @@
 }
 
 .horizontal-scroll-indicator::-webkit-scrollbar {
-  height: 12px;
+  height: 14px;
 }
 
 .horizontal-scroll-indicator::-webkit-scrollbar-track {
@@ -795,7 +796,7 @@
 
 .horizontal-scroll-indicator::-webkit-scrollbar-thumb {
   border-radius: 6px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background 0.2s ease, transform 0.2s ease;
   position: relative;
 }
 
@@ -828,33 +829,34 @@
 /* Hover effects for scroll indicator */
 .workhub-page.dark-theme .horizontal-scroll-indicator::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, 
-    rgba(147, 112, 219, 1) 0%, 
+    rgba(147, 112, 219, 0.9) 0%, 
     rgba(186, 156, 255, 1) 50%, 
-    rgba(147, 112, 219, 1) 100%
+    rgba(147, 112, 219, 0.9) 100%
   );
   box-shadow: 
     0 4px 16px rgba(147, 112, 219, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
+  transform: scaleY(1.2);
   border-color: rgba(147, 112, 219, 0.5);
 }
 
 .workhub-page.light-theme .horizontal-scroll-indicator::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, 
-    rgba(0, 0, 0, 0.4) 0%, 
-    rgba(0, 0, 0, 0.5) 50%, 
-    rgba(0, 0, 0, 0.4) 100%
+    rgba(0, 0, 0, 0.35) 0%, 
+    rgba(0, 0, 0, 0.45) 50%, 
+    rgba(0, 0, 0, 0.35) 100%
   );
   box-shadow: 
     0 4px 16px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  transform: scale(1.05);
+  transform: scaleY(1.2);
   border-color: rgba(0, 0, 0, 0.3);
 }
 
 /* Scrollbar Styles */
 .project-table-container::-webkit-scrollbar {
-  height: 12px;
+  height: 14px;
+  width: 14px;
 }
 
 .project-table-container::-webkit-scrollbar-track {
@@ -876,22 +878,18 @@
 
 .project-table-container::-webkit-scrollbar-thumb {
   border-radius: 6px;
-  transition: var(--transition-fast);
+  transition: background 0.2s ease, transform 0.2s ease;
   will-change: transform; /* Optimize for hover animations */
 }
 
 .workhub-page.dark-theme .project-table-container::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, rgba(147, 112, 219, 0.8) 0%, rgba(186, 156, 255, 0.9) 50%, rgba(147, 112, 219, 0.8) 100%);
-  border: 1px solid rgba(147, 112, 219, 0.3);
   box-shadow: 0 2px 8px rgba(147, 112, 219, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  cursor: grab;
 }
 
 .workhub-page.light-theme .project-table-container::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.3) 100%);
   border: 1px solid rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  cursor: grab;
 }
 
 /* Project Table Wrapper */
@@ -903,9 +901,9 @@
   padding: 0; 
   position: relative; 
   will-change: scroll-position; /* Optimize for scroll performance */
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  scroll-behavior: auto; /* Let our custom animation handle smoothness */
-  overscroll-behavior-x: none; /* Prevent overscroll effects */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: auto;
+  overscroll-behavior-x: none;
 }
 
 /* Project Table */

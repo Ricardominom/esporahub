@@ -123,7 +123,8 @@ const WorkHubPage: React.FC = () => {
   // Sync scroll between table and scroll indicator
   useEffect(() => {
     const projectTable = projectTableContainerRef.current;
-    const scrollIndicator = horizontalScrollIndicatorRef.current;
+    const scrollIndicator = horizontalScrollIndicatorRef.current; 
+    const scrollContent = scrollContentRef.current;
     
     // Set the scroll content width to match the table width
     if (activeTab === 'proyecto' && projectTable && scrollContentRef.current) {
@@ -132,7 +133,19 @@ const WorkHubPage: React.FC = () => {
       scrollContentRef.current.style.minWidth = `${tableWidth}px`;
     }
     
-    if (activeTab === 'proyecto' && projectTable && scrollIndicator) {
+    if (activeTab === 'proyecto' && projectTable && scrollIndicator && scrollContent) {
+      // Set initial scroll content width to match table width
+      const updateScrollContentWidth = () => {
+        const tableWidth = projectTable.scrollWidth;
+        scrollContent.style.minWidth = `${tableWidth}px`;
+      };
+      
+      // Initial width update
+      updateScrollContentWidth();
+      
+      // Update width on window resize
+      window.addEventListener('resize', updateScrollContentWidth);
+      
       // Smooth scroll synchronization from table to indicator
       const handleTableScroll = (e: Event) => {
         if (scrollIndicator) {
@@ -154,17 +167,17 @@ const WorkHubPage: React.FC = () => {
       // Add wheel event for horizontal scrolling
       const handleWheel = (e: WheelEvent) => {
         if (e.deltaY !== 0) {
-          e.preventDefault();
+          e.preventDefault(); 
           
-          // Enhanced smooth scrolling with better physics
-          const scrollAmount = e.deltaY * 1.5; // Increased scroll speed for better fluidity
+          // Enhanced smooth scrolling with better physics and acceleration
+          const scrollAmount = e.deltaY * 2.0; // Further increased scroll speed for better fluidity
           const currentScroll = projectTable.scrollLeft;
           const maxScroll = projectTable.scrollWidth - projectTable.clientWidth;
           const targetScroll = Math.max(0, Math.min(currentScroll + scrollAmount, maxScroll));
           
           // Use smooth animation with requestAnimationFrame for better performance
           const startTime = performance.now();
-          const duration = 250; // ms - even shorter duration for more responsive feel
+          const duration = 200; // ms - even shorter duration for more responsive feel
           
           const animateScroll = (timestamp: number) => {
             const elapsed = timestamp - startTime;
@@ -190,7 +203,8 @@ const WorkHubPage: React.FC = () => {
       return () => {
         projectTable.removeEventListener('scroll', handleTableScroll);
         scrollIndicator.removeEventListener('scroll', handleIndicatorScroll);
-        projectTable.removeEventListener('wheel', handleWheel);
+        projectTable.removeEventListener('wheel', handleWheel); 
+        window.removeEventListener('resize', updateScrollContentWidth);
       }
     }
   }, [activeTab]);
@@ -650,6 +664,16 @@ const WorkHubPage: React.FC = () => {
               className="horizontal-scroll-indicator"
               style={{
                 cursor: 'grab'
+              }} 
+              onMouseDown={() => {
+                if (horizontalScrollIndicatorRef.current) {
+                  horizontalScrollIndicatorRef.current.style.cursor = 'grabbing';
+                }
+              }}
+              onMouseUp={() => {
+                if (horizontalScrollIndicatorRef.current) {
+                  horizontalScrollIndicatorRef.current.style.cursor = 'grab';
+                }
               }}
             >
               <div 
@@ -676,8 +700,19 @@ const WorkHubPage: React.FC = () => {
                   padding: '0',
                   overscrollBehaviorX: 'none',
                   willChange: 'scroll-position',
-                  WebkitOverflowScrolling: 'touch',
-                  cursor: 'grab'
+                  WebkitOverflowScrolling: 'touch', 
+                  cursor: 'grab',
+                  msOverflowStyle: 'none'
+                }}
+                onMouseDown={() => {
+                  if (projectTableContainerRef.current) {
+                    projectTableContainerRef.current.style.cursor = 'grabbing';
+                  }
+                }}
+                onMouseUp={() => {
+                  if (projectTableContainerRef.current) {
+                    projectTableContainerRef.current.style.cursor = 'grab';
+                  }
                 }}
               >
                 <table 
