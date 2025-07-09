@@ -33,6 +33,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       login: async (credentials: LoginCredentials) => {
         try {
           set({ isLoading: true, error: null });
+          
+          // Limpiar cualquier token anterior
+          localStorage.removeItem('authToken');
 
           // Autenticar con datos locales
           const user = authenticateUser(credentials.email, credentials.password);
@@ -66,11 +69,13 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
       logout: () => {
         localStorage.removeItem('authToken');
+        // Asegurarse de que el estado se actualice correctamente
         set({
           user: null,
           token: null,
           isAuthenticated: false,
           error: null,
+          isLoading: false
         });
       },
 
@@ -85,19 +90,23 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       refreshToken: async () => {
         try {
           const currentToken = get().token;
-          const currentUser = get().user;
+          const storedToken = localStorage.getItem('authToken');
           
-          if (!currentToken || !currentUser) {
+          // Si no hay token en el estado o en localStorage, hacer logout
+          if (!currentToken && !storedToken) {
             get().logout();
             return;
           }
           
-          // En una implementación real, aquí se renovaría el token
-          // Por ahora solo verificamos que el usuario siga existiendo
-          const user = authenticateUser(currentUser.email, 'password');
-          
-          if (!user) {
-            get().logout();
+          // Si hay token en localStorage pero no en el estado, intentar restaurar la sesión
+          if (storedToken && !currentToken) {
+            // Aquí podríamos hacer una verificación del token
+            // Por ahora simplemente asumimos que es válido
+            set({
+              token: storedToken,
+              isAuthenticated: true,
+              isLoading: false
+            });
           }
         } catch (error) {
           // Si falla el refresh, hacer logout

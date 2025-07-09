@@ -4,6 +4,7 @@ import LoginButton from './LoginButton';
 import Logo from './Logo';
 // import FlowEffect from './FlowEffect'; // Temporalmente deshabilitado
 import MeltingText from './MeltingText';
+import { useAuthStore } from '../stores/authStore';
 import '../styles/header.css';
 import '../styles/flow-effect.css';
 
@@ -11,6 +12,7 @@ const Header: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
     setIsVisible(true);
@@ -23,12 +25,12 @@ const Header: React.FC = () => {
   useEffect(() => {
     // Solo redirigir si estamos en la página principal
     if (location.pathname === '/') {
-      const token = localStorage.getItem('authToken');
-      if (token) {
+      if (isAuthenticated) {
+        console.log('Usuario autenticado en la página principal, redirigiendo a dashboard');
         navigate('/dashboard');
       }
     }
-  }, [navigate, location.pathname]);
+  }, [navigate, location.pathname, isAuthenticated]);
 
   return (
     <header className="header dark-theme">

@@ -3,7 +3,15 @@ export const storage = {
   // Obtener item del localStorage
   getItem: <T>(key: string, defaultValue?: T): T | null | undefined => {
     try {
-      const item = localStorage.getItem(key);
+      // Usar try-catch para manejar posibles errores de localStorage
+      let item;
+      try {
+        item = localStorage.getItem(key);
+      } catch (e) {
+        console.error(`Error accessing localStorage for key "${key}":`, e);
+        return defaultValue || null;
+      }
+      
       if (item === null) {
         return defaultValue || null;
       }
@@ -43,7 +51,12 @@ export const storage = {
 
   // Verificar si una clave existe
   hasItem: (key: string): boolean => {
-    return localStorage.getItem(key) !== null;
+    try {
+      return localStorage.getItem(key) !== null;
+    } catch (e) {
+      console.error(`Error checking localStorage for key "${key}":`, e);
+      return false;
+    }
   },
 
   // Guardar datos del acuerdo de colaboración

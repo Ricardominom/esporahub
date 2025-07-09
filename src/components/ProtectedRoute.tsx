@@ -21,6 +21,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const [deniedFeature, setDeniedFeature] = useState('');
   const location = useLocation();
   const isLandingPage = location.pathname === '/';
+  const token = localStorage.getItem('authToken');
 
   // Mostrar loading mientras se verifica la autenticación
   if (isLoading) {
@@ -32,9 +33,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Si es la página principal (/) y hay un token pero no está autenticado, 
-  // probablemente el token es inválido, así que lo eliminamos
-  if (isLandingPage && !isAuthenticated && storage.hasItem('authToken')) {
-    storage.removeItem('authToken');
+  // probablemente el token es inválido, así que lo eliminamos y forzamos un logout
+  if (isLandingPage && !isAuthenticated && token) {
+    console.log('Token inválido detectado en la página principal, eliminando...');
+    localStorage.removeItem('authToken');
+    logout();
+    return <>{children}</>;
   }
 
   // Si requiere autenticación y no está autenticado, redirigir al login,
@@ -79,7 +83,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Si está autenticado y trata de acceder al login, redirigir al dashboard
-  if (!requireAuth && isAuthenticated && (location.pathname === '/login')) {
+  if (!requireAuth && isAuthenticated && location.pathname === '/login') {
     return <Navigate to="/dashboard" replace />;
   }
 

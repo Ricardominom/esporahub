@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Header from './components/Header';
@@ -18,10 +18,17 @@ import InactiveAccountsPage from './pages/InactiveAccountsPage';
 import ExpedienteElectronicoPage from './pages/ExpedienteElectronicoPage';
 import PresentacionInicialPage from './pages/PresentacionInicialPage';
 import WorkHubPage from './pages/WorkHubPage';
+import { useAuthStore } from './stores/authStore';
 import './styles/global.css';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
+  const { refreshToken } = useAuthStore();
+  
+  // Intentar restaurar la sesión al cargar la aplicación
+  useEffect(() => {
+    refreshToken();
+  }, [refreshToken]);
   
   return (
     <TransitionGroup>
