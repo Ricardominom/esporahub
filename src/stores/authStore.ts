@@ -70,6 +70,12 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       logout: () => {
         localStorage.removeItem('authToken');
         // Asegurarse de que el estado se actualice correctamente
+        
+        // Preservar datos del capturista
+        const capturistaTasks = localStorage.getItem('capturistaTasks');
+        const capturistaProjects = localStorage.getItem('capturistaProjects');
+        const capturistaFieldValues = localStorage.getItem('capturistaFieldValues');
+        
         set({
           user: null,
           token: null,
@@ -77,6 +83,11 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           error: null,
           isLoading: false
         });
+        
+        // Restaurar datos del capturista después del logout
+        if (capturistaTasks) localStorage.setItem('capturistaTasks', capturistaTasks);
+        if (capturistaProjects) localStorage.setItem('capturistaProjects', capturistaProjects);
+        if (capturistaFieldValues) localStorage.setItem('capturistaFieldValues', capturistaFieldValues);
       },
 
       clearError: () => {

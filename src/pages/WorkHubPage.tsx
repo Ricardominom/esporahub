@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Calendar, CheckSquare, Clock, AlertCircle, CheckCircle, FileText, ArrowUp, Layers, Briefcase, Users, Clock4 } from 'lucide-react';
+import { LogOut, Calendar, CheckSquare, Clock, AlertCircle, CheckCircle, FileText, ArrowUp, Layers, Briefcase, Users, Clock4, CheckCircle2 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import { hasPermission } from '../data/users';
 import LogoutDialog from '../components/LogoutDialog';
@@ -10,6 +10,153 @@ import InputModal from '../components/InputModal';
 import SelectAccountModalForWorkHub from '../components/SelectAccountModalForWorkHub';
 import AccountBadge from '../components/AccountBadge';
 import '../styles/workhub.css';
+
+// Datos hardcodeados para el usuario capturista
+const CAPTURISTA_TASKS: TaskAssignment[] = [
+  {
+    itemId: 'A-106',
+    userId: '3', // ID del capturista
+    concept: 'Análisis del Humor Social',
+    dueDate: '2025-07-20',
+    section: 'Estudios Antropológicos',
+    sectionId: 'antropologicos',
+    completed: false
+  },
+  {
+    itemId: 'A-107',
+    userId: '3',
+    concept: 'Histograma del humor social',
+    dueDate: '2025-07-25',
+    section: 'Estudios Antropológicos',
+    sectionId: 'antropologicos',
+    completed: true
+  },
+  {
+    itemId: 'A-108',
+    userId: '3',
+    concept: 'Estudio de identificación y definición del perfil y sus adjetivos',
+    dueDate: '2025-07-15',
+    section: 'Estudios Antropológicos',
+    sectionId: 'antropologicos',
+    completed: false
+  },
+  {
+    itemId: 'A-128',
+    userId: '3',
+    concept: 'Social Listening Base',
+    dueDate: '2025-07-10',
+    section: 'Otros Estudios',
+    sectionId: 'otros-estudios',
+    completed: false
+  },
+  {
+    itemId: 'A-129',
+    userId: '3',
+    concept: 'Investigación en Sitio (Paneles)',
+    dueDate: '2025-08-05',
+    section: 'Otros Estudios',
+    sectionId: 'otros-estudios',
+    completed: false
+  }
+];
+
+// Datos hardcodeados para proyectos del capturista
+const CAPTURISTA_PROJECTS: ProjectItem[] = [
+  {
+    id: 'A-106',
+    concept: 'Análisis del Humor Social',
+    section: 'Estudios Antropológicos',
+    sectionId: 'antropologicos',
+    completed: false
+  },
+  {
+    id: 'A-107',
+    concept: 'Histograma del humor social',
+    section: 'Estudios Antropológicos',
+    sectionId: 'antropologicos',
+    completed: true
+  },
+  {
+    id: 'A-108',
+    concept: 'Estudio de identificación y definición del perfil y sus adjetivos',
+    section: 'Estudios Antropológicos',
+    sectionId: 'antropologicos',
+    completed: false
+  },
+  {
+    id: 'A-128',
+    concept: 'Social Listening Base',
+    section: 'Otros Estudios',
+    sectionId: 'otros-estudios',
+    completed: false
+  },
+  {
+    id: 'A-129',
+    concept: 'Investigación en Sitio (Paneles)',
+    section: 'Otros Estudios',
+    sectionId: 'otros-estudios',
+    completed: false
+  }
+];
+
+// Datos de campos para los proyectos del capturista
+const CAPTURISTA_FIELD_VALUES: { [key: string]: string } = {
+  'A-106-fase': 'Fase 1',
+  'A-106-linea_estrategica': 'Investigación',
+  'A-106-microcampana': 'Análisis Social',
+  'A-106-estatus': 'En proceso',
+  'A-106-gerente': 'Ana Martínez',
+  'A-106-colaboradores': '3',
+  'A-106-nombre_colaborador': 'Capturista',
+  'A-106-perfil_colaborador': 'Analista de datos',
+  'A-106-solicitud_entrega': '15/07/2025',
+  'A-106-semana_curso': 'Semana 28',
+  'A-106-tipo_item': 'Análisis',
+  'A-106-cantidad_v': '1',
+  'A-106-cantidad_pr': '2',
+  'A-106-cantidad_a': '3',
+  'A-106-fecha_finalizacion': '2025-07-20',
+  'A-106-repositorio_co': 'Dropbox',
+  'A-106-enlace_repositorio': 'https://dropbox.com/shared/123',
+  
+  'A-107-fase': 'Fase 1',
+  'A-107-linea_estrategica': 'Investigación',
+  'A-107-microcampana': 'Análisis Social',
+  'A-107-estatus': 'Completado',
+  'A-107-gerente': 'Ana Martínez',
+  'A-107-colaboradores': '2',
+  'A-107-nombre_colaborador': 'Capturista',
+  'A-107-perfil_colaborador': 'Analista de datos',
+  'A-107-solicitud_entrega': '10/07/2025',
+  'A-107-semana_curso': 'Semana 27',
+  'A-107-tipo_item': 'Análisis',
+  'A-107-cantidad_v': '1',
+  'A-107-cantidad_pr': '1',
+  'A-107-cantidad_a': '1',
+  'A-107-fecha_finalizacion': '2025-07-15',
+  'A-107-repositorio_co': 'Dropbox',
+  'A-107-enlace_repositorio': 'https://dropbox.com/shared/456',
+  
+  'A-108-fase': 'Fase 1',
+  'A-108-linea_estrategica': 'Investigación',
+  'A-108-microcampana': 'Perfiles',
+  'A-108-estatus': 'En proceso',
+  'A-108-gerente': 'Carlos Ruiz',
+  'A-108-colaboradores': '4',
+  'A-108-nombre_colaborador': 'Capturista',
+  'A-108-perfil_colaborador': 'Analista de datos',
+  
+  'A-128-fase': 'Fase 2',
+  'A-128-linea_estrategica': 'Digital',
+  'A-128-microcampana': 'Redes Sociales',
+  'A-128-estatus': 'Pendiente',
+  'A-128-gerente': 'Laura Sánchez',
+  
+  'A-129-fase': 'Fase 2',
+  'A-129-linea_estrategica': 'Investigación',
+  'A-129-microcampana': 'Trabajo de Campo',
+  'A-129-estatus': 'Programado'
+};
 
 interface TaskAssignment {
   itemId: string;
@@ -40,7 +187,7 @@ const WorkHubPage: React.FC = () => {
   const [selectedAccount, setSelectedAccount] = useState<{ id: number, name: string } | null>(() => {
     // Intentar cargar la cuenta seleccionada desde localStorage
     const savedAccount = storage.getItem<{ id: number, name: string }>('selectedWorkHubAccount');
-    return savedAccount;
+    return savedAccount || { id: 1, name: 'Juan Pérez - Alcalde' };
   });
   const [isLoading, setIsLoading] = useState(false);
   const [projectItems, setProjectItems] = useState<ProjectItem[]>([]);
@@ -48,11 +195,7 @@ const WorkHubPage: React.FC = () => {
   const [taskAssignments, setTaskAssignments] = useState<TaskAssignment[]>([]);
   const [groupedItems, setGroupedItems] = useState<{ [key: string]: (ProjectItem | TaskAssignment)[] }>({});
   const [sectionOrder, setSectionOrder] = useState<string[]>([]);
-  const [fieldValues, setFieldValues] = useState<{ [key: string]: string }>(() => {
-    // Intentar cargar los valores de los campos desde localStorage
-    const savedValues = storage.getItem<{ [key: string]: string }>('fieldValues');
-    return savedValues || {};
-  });
+  const [fieldValues, setFieldValues] = useState<{ [key: string]: string }>(CAPTURISTA_FIELD_VALUES);
   const [modalState, setModalState] = useState({
     isOpen: false,
     fieldName: '',
@@ -89,35 +232,50 @@ const WorkHubPage: React.FC = () => {
   useEffect(() => {
     setIsVisible(true);
 
-    const loadData = () => {
-      // Cargar tareas
-      try {
-        // Cargar las asignaciones de tareas desde localStorage pero filtrar las dummy
-        let savedAssignments = storage.getItem<TaskAssignment[]>('taskAssignments') || [];
+    // Verificar si el usuario es capturista y cargar datos hardcodeados
+    if (user && user.id === '3') { // ID del capturista
+      // Cargar tareas hardcodeadas para el capturista
+      setTaskAssignments(CAPTURISTA_TASKS);
+      
+      // Cargar proyectos hardcodeados para el capturista
+      setProjectItems(CAPTURISTA_PROJECTS);
+      
+      // Guardar en localStorage para persistencia
+      storage.setItem('capturistaTasks', CAPTURISTA_TASKS);
+      storage.setItem('capturistaProjects', CAPTURISTA_PROJECTS);
+      storage.setItem('capturistaFieldValues', CAPTURISTA_FIELD_VALUES);
+    } else {
+      // Para otros usuarios, cargar desde localStorage
+      const loadData = () => {
+        // Cargar tareas
+        try {
+          // Cargar las asignaciones de tareas desde localStorage pero filtrar las dummy
+          let savedAssignments = storage.getItem<TaskAssignment[]>('taskAssignments') || [];
 
-        // Filtrar solo tareas reales (que tengan un itemId que comience con A- o B-)
-        savedAssignments = savedAssignments.filter(task =>
-          task.itemId && (task.itemId.startsWith('A-') || task.itemId.startsWith('B-'))
-        );
+          // Filtrar solo tareas reales (que tengan un itemId que comience con A- o B-)
+          savedAssignments = savedAssignments.filter(task =>
+            task.itemId && (task.itemId.startsWith('A-') || task.itemId.startsWith('B-'))
+          );
 
-        // Filtrar solo las tareas asignadas al usuario actual
-        if (user) {
-          const userTasks = savedAssignments.filter(task => task.userId === user.id);
-          setTaskAssignments(userTasks);
+          // Filtrar solo las tareas asignadas al usuario actual
+          if (user) {
+            const userTasks = savedAssignments.filter(task => task.userId === user.id);
+            setTaskAssignments(userTasks);
+          }
+        } catch (error) {
+          console.error('Error loading task assignments:', error);
+          setTaskAssignments([]);
         }
-      } catch (error) {
-        console.error('Error loading task assignments:', error);
-        setTaskAssignments([]);
-      }
 
-      // Cargar ítems del proyecto si hay una cuenta seleccionada
-      if (selectedAccount) {
-        loadProjectItems();
-      }
-    };
+        // Cargar ítems del proyecto si hay una cuenta seleccionada
+        if (selectedAccount) {
+          loadProjectItems();
+        }
+      };
 
-    // Cargar datos inicialmente
-    loadData();
+      // Cargar datos inicialmente
+      loadData();
+    }
   }, [user, selectedAccount]);
 
   // Sync scroll between table and scroll indicator
@@ -212,30 +370,35 @@ const WorkHubPage: React.FC = () => {
   // Combine project items and task assignments for the project tab
   useEffect(() => {
     // Create a combined list of project items and task assignments
-    const combined: (ProjectItem | TaskAssignment)[] = [];
+    let combined: (ProjectItem | TaskAssignment)[] = [];
 
-    // Solo agregar items si hay una cuenta seleccionada
-    if (selectedAccount) {
-      // Agregar los items del proyecto filtrados por la cuenta seleccionada
-      combined.push(...projectItems);
+    // Si es el usuario capturista, usar los datos hardcodeados
+    if (user && user.id === '3') {
+      combined = [...CAPTURISTA_PROJECTS];
+    } else {
+      // Solo agregar items si hay una cuenta seleccionada
+      if (selectedAccount) {
+        // Agregar los items del proyecto filtrados por la cuenta seleccionada
+        combined.push(...projectItems);
 
-      // Add task assignments that aren't already in project items
-      taskAssignments.forEach(task => {
-        // Check if this task is already in project items
-        const existingItem = projectItems.find(item => item.id === task.itemId);
+        // Add task assignments that aren't already in project items
+        taskAssignments.forEach(task => {
+          // Check if this task is already in project items
+          const existingItem = projectItems.find(item => item.id === task.itemId);
 
-        // If not found and it's a valid task with an itemId, add it
-        if (!existingItem && task.itemId && (task.itemId.startsWith('A-') || task.itemId.startsWith('B-'))) {
-          combined.push({
-            id: task.itemId,
-            concept: task.concept || "Tarea sin nombre",
-            section: task.section || "Sin sección",
-            sectionId: task.sectionId || "",
-            completed: task.completed || false,
-            isTaskAssignment: true
-          });
-        }
-      });
+          // If not found and it's a valid task with an itemId, add it
+          if (!existingItem && task.itemId && (task.itemId.startsWith('A-') || task.itemId.startsWith('B-'))) {
+            combined.push({
+              id: task.itemId,
+              concept: task.concept || "Tarea sin nombre",
+              section: task.section || "Sin sección",
+              sectionId: task.sectionId || "",
+              completed: task.completed || false,
+              isTaskAssignment: true
+            });
+          }
+        });
+      }
     }
 
     // Group items by section
@@ -266,6 +429,44 @@ const WorkHubPage: React.FC = () => {
     setGroupedItems(grouped);
     setSectionOrder(order);
   }, [projectItems, taskAssignments, selectedAccount]);
+
+  // Cargar datos guardados del capturista al iniciar
+  useEffect(() => {
+    if (user && user.id === '3') {
+      // Intentar cargar datos guardados del capturista
+      const savedTasks = storage.getItem<TaskAssignment[]>('capturistaTasks');
+      const savedProjects = storage.getItem<ProjectItem[]>('capturistaProjects');
+      const savedFieldValues = storage.getItem<{[key: string]: string}>('capturistaFieldValues');
+      
+      // Si hay datos guardados, usarlos en lugar de los hardcodeados
+      if (savedTasks && savedTasks.length > 0) {
+        setTaskAssignments(savedTasks);
+      } else {
+        setTaskAssignments(CAPTURISTA_TASKS);
+      }
+      
+      if (savedProjects && savedProjects.length > 0) {
+        setProjectItems(savedProjects);
+      } else {
+        setProjectItems(CAPTURISTA_PROJECTS);
+      }
+      
+      if (savedFieldValues && Object.keys(savedFieldValues).length > 0) {
+        setFieldValues(savedFieldValues);
+      } else {
+        setFieldValues(CAPTURISTA_FIELD_VALUES);
+      }
+    }
+  }, [user]);
+
+  // Guardar cambios en los datos del capturista
+  useEffect(() => {
+    if (user && user.id === '3') {
+      storage.setItem('capturistaTasks', taskAssignments);
+      storage.setItem('capturistaProjects', projectItems);
+      storage.setItem('capturistaFieldValues', fieldValues);
+    }
+  }, [taskAssignments, projectItems, fieldValues, user]);
 
   // Función para cargar los ítems del proyecto desde localStorage
   const loadProjectItems = () => {
@@ -330,6 +531,12 @@ const WorkHubPage: React.FC = () => {
   // Función para obtener las tareas según la categoría seleccionada
   const getFilteredTasks = () => {
     if (!taskAssignments.length) return [];
+    
+    // Si es el usuario capturista, usar los datos hardcodeados
+    if (user && user.id === '3') {
+      // Filtrar según la categoría seleccionada
+      return filterTasksByCategory(CAPTURISTA_TASKS);
+    }
 
     // Filtrar solo tareas reales (que tengan un itemId que comience con A- o B-)
     const realTasks = taskAssignments.filter(task =>
@@ -338,6 +545,11 @@ const WorkHubPage: React.FC = () => {
 
     if (!realTasks.length) return [];
 
+    return filterTasksByCategory(realTasks);
+  };
+
+  // Función auxiliar para filtrar tareas por categoría
+  const filterTasksByCategory = (tasks: TaskAssignment[]) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -350,7 +562,7 @@ const WorkHubPage: React.FC = () => {
     const nextWeekEnd = new Date(nextWeekStart);
     nextWeekEnd.setDate(nextWeekStart.getDate() + 6);
 
-    return taskAssignments.filter(task => {
+    return tasks.filter(task => {
       // Si la categoría es "all", mostrar todas las tareas reales
       if (selectedCategory === 'all') return true;
 
@@ -385,6 +597,12 @@ const WorkHubPage: React.FC = () => {
   // Función para obtener el conteo de tareas por categoría
   const getTaskCountForCategory = (categoryId: string) => {
     if (!taskAssignments.length) return 0;
+    
+    // Si es el usuario capturista, usar los datos hardcodeados
+    if (user && user.id === '3') {
+      // Filtrar según la categoría
+      return countTasksByCategory(CAPTURISTA_TASKS, categoryId);
+    }
 
     // Filtrar solo tareas reales (que tengan un itemId que comience con A- o B-)
     const realTasks = taskAssignments.filter(task =>
@@ -393,8 +611,13 @@ const WorkHubPage: React.FC = () => {
 
     if (!realTasks.length) return 0;
 
+    return countTasksByCategory(realTasks, categoryId);
+  };
+
+  // Función auxiliar para contar tareas por categoría
+  const countTasksByCategory = (tasks: TaskAssignment[], categoryId: string) => {
     // Si la categoría es "all", mostrar el total de tareas
-    if (categoryId === 'all') return realTasks.length;
+    if (categoryId === 'all') return tasks.length;
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -408,7 +631,7 @@ const WorkHubPage: React.FC = () => {
     const nextWeekEnd = new Date(nextWeekStart);
     nextWeekEnd.setDate(nextWeekStart.getDate() + 6);
 
-    return taskAssignments.filter(task => {
+    return tasks.filter(task => {
       if (!task.dueDate || !task.itemId || !(task.itemId.startsWith('A-') || task.itemId.startsWith('B-'))) return false;
 
       const dueDate = new Date(task.dueDate);
@@ -622,7 +845,7 @@ const WorkHubPage: React.FC = () => {
               {filteredTasks && filteredTasks.length > 0 ? (
                 filteredTasks.map((task) => (
                   <div key={task.itemId} className="task-card">
-                    <div className="task-card-header">
+                    <div className="task-card-header" style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <div className="task-card-section">{task.section || "Sin sección"}</div>
                       <div className="task-card-date">
                         <Calendar size={14} />
@@ -638,8 +861,8 @@ const WorkHubPage: React.FC = () => {
                       <div className="task-card-footer">
                         <div className="task-card-code">{task.itemId || task.code || "Sin código"}</div>
                         {task.completed && (
-                          <div className="task-completed-badge">
-                            <CheckCircle size={16} />
+                          <div className="task-completed-badge" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <CheckCircle2 size={16} />
                             <span>Completada</span>
                           </div>
                         )}
@@ -771,7 +994,7 @@ const WorkHubPage: React.FC = () => {
                                 <td className="item-code-cell" style={{ width: '180px', minWidth: '180px' }}>
                                   <div 
                                     className="item-code" 
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: 'pointer', fontWeight: 'bold' }}
                                     onClick={() => navigate('/item-detail', { 
                                       state: { 
                                         item: {
@@ -784,7 +1007,7 @@ const WorkHubPage: React.FC = () => {
                                   >{item.id}</div>
                                   <div 
                                     className="item-concept-cell" 
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: 'pointer', marginTop: '4px' }}
                                     onClick={() => navigate('/item-detail', { 
                                       state: { 
                                         item: {
@@ -798,7 +1021,7 @@ const WorkHubPage: React.FC = () => {
                                 </td>
                                 <td>
                                   <button className="project-action-btn upload-btn">
-                                    <ArrowUp size={16} />
+                                    <ArrowUp size={16} style={{ color: item.completed ? '#22c55e' : undefined }} />
                                   </button>
                                 </td>
                                 <td>
@@ -835,10 +1058,11 @@ const WorkHubPage: React.FC = () => {
                                   <input
                                     type="text"
                                     className="project-input"
-                                    value={getFieldValue(item.id, 'estatus')}
+                                    value={item.completed ? 'Completado' : getFieldValue(item.id, 'estatus')}
                                     placeholder="Estatus"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Estatus')}
+                                    style={{ color: item.completed ? '#22c55e' : undefined, fontWeight: item.completed ? 'bold' : undefined }}
                                   />
                                 </td>
                                 <td>
@@ -1015,20 +1239,22 @@ const WorkHubPage: React.FC = () => {
                                   <input
                                     type="text"
                                     className="project-input"
-                                    value={getFieldValue(item.id, 'estatus_testeo')}
+                                    value={item.completed ? 'Aprobado' : getFieldValue(item.id, 'estatus_testeo')}
                                     placeholder="Estatus testeo"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Estatus testeo')}
+                                    style={{ color: item.completed ? '#22c55e' : undefined, fontWeight: item.completed ? 'bold' : undefined }}
                                   />
                                 </td>
                                 <td>
                                   <input
                                     type="text"
                                     className="project-input"
-                                    value={getFieldValue(item.id, 'entrega_cliente')}
+                                    value={item.completed ? 'Entregado' : getFieldValue(item.id, 'entrega_cliente')}
                                     placeholder="Entrega al cliente"
                                     readOnly
                                     onClick={() => openModal(item.id, 'Entrega al cliente')}
+                                    style={{ color: item.completed ? '#22c55e' : undefined, fontWeight: item.completed ? 'bold' : undefined }}
                                   />
                                 </td>
                                 <td>
