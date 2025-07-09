@@ -155,14 +155,15 @@ const ItemDetailPage: React.FC = () => {
             <div 
               className={`upload-area ${isDragOver ? 'drag-over' : ''}`}
               onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
+              onDragLeave={handleDragLeave} 
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
+              style={{ minHeight: '600px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
             >
               <div className="upload-icon">
                 <Upload size={48} />
               </div>
-              <h3>DRAG AND DROP</h3>
+              <h3 style={{ fontSize: '2.5rem', marginTop: '2rem', marginBottom: '2rem' }}>DRAG AND DROP</h3>
               <p>Arrastra archivos aquí o haz clic para seleccionar</p>
               <div className="upload-formats">
                 <span>Formatos aceptados: PDF, DOCX, XLSX, JPG, PNG</span>
