@@ -157,7 +157,7 @@ const ItemDetailPage: React.FC = () => {
               <p className="item-note">Este item debe ser modificado (periodicidad)</p>
               
               <div className="item-actions">
-                <button className="download-template-button">
+                <button className="download-template-button" style={{ marginTop: 0 }}>
                   <Download size={16} />
                   <span>Descargar plantilla</span>
                 </button>
@@ -165,6 +165,7 @@ const ItemDetailPage: React.FC = () => {
                 <button 
                   className={`complete-item-button ${isCompleted ? 'completed' : ''}`} 
                   onClick={() => setIsCompleted(!isCompleted)}
+                  style={{ marginTop: 0 }}
                 >
                   {isCompleted ? <CheckSquare size={16} /> : <Square size={16} />}
                   <span className={isCompleted ? 'completed-text' : ''}>{isCompleted ? 'Completado' : 'Marcar como completado'}</span>
