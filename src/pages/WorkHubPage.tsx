@@ -124,15 +124,15 @@ const WorkHubPage: React.FC = () => {
     const scrollIndicator = horizontalScrollIndicatorRef.current;
     
     if (activeTab === 'proyecto' && projectTable && scrollIndicator) {
-      // Function to handle scroll synchronization
-      const handleTableScroll = () => {
+      // Smooth scroll synchronization from table to indicator
+      const handleTableScroll = (e: Event) => {
         if (scrollIndicator) {
           scrollIndicator.scrollLeft = projectTable.scrollLeft;
         }
       };
       
-      // Function to handle indicator scroll
-      const handleIndicatorScroll = () => {
+      // Smooth scroll synchronization from indicator to table
+      const handleIndicatorScroll = (e: Event) => {
         if (projectTable) {
           projectTable.scrollLeft = scrollIndicator.scrollLeft;
         }
@@ -147,14 +147,30 @@ const WorkHubPage: React.FC = () => {
         if (e.deltaY !== 0) {
           e.preventDefault();
           
-          // Smoother scrolling with animation
-          const scrollAmount = e.deltaY * 1.2; // Adjust scroll speed
+          // Enhanced smooth scrolling with better physics
+          const scrollAmount = e.deltaY * 1.5; // Increased scroll speed for better fluidity
+          const currentScroll = projectTable.scrollLeft;
+          const targetScroll = currentScroll + scrollAmount;
           
-          // Use smooth scrolling
-          projectTable.scrollBy({
-            left: scrollAmount,
-            behavior: 'smooth'
-          });
+          // Use smooth animation with requestAnimationFrame for better performance
+          const startTime = performance.now();
+          const duration = 300; // ms - shorter duration for more responsive feel
+          
+          const animateScroll = (timestamp: number) => {
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease out cubic function for natural deceleration
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            
+            const newPosition = currentScroll + (targetScroll - currentScroll) * easeOut;
+            projectTable.scrollLeft = newPosition;
+            
+            if (progress < 1) {
+              requestAnimationFrame(animateScroll);
+            }
+          };
+          
+          requestAnimationFrame(animateScroll);
         }
       };
       
@@ -622,25 +638,6 @@ const WorkHubPage: React.FC = () => {
             <div 
               ref={horizontalScrollIndicatorRef}
               className="horizontal-scroll-indicator"
-              style={{
-                width: '100%',
-                height: '12px',
-                overflowX: 'auto',
-                overflowY: 'hidden',
-                marginBottom: '8px',
-                borderRadius: '6px',
-                position: 'relative',
-                zIndex: 16,
-                ...(isDarkMode 
-                  ? {
-                      background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(26, 11, 46, 0.4) 50%, rgba(0, 0, 0, 0.3) 100%)',
-                      border: '1px solid rgba(147, 112, 219, 0.1)'
-                    } 
-                  : {
-                      background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.05) 100%)',
-                      border: '1px solid rgba(0, 0, 0, 0.1)'
-                    })
-              }}
             >
               <div 
                 className="scroll-content" 
