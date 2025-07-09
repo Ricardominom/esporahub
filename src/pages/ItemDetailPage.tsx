@@ -178,12 +178,12 @@ const ItemDetailPage: React.FC = () => {
             
             {uploadedFiles.length > 0 && (
               <div className="uploaded-files">
-                <h3>Archivos subidos</h3>
+                <h3>Archivos subidos ({uploadedFiles.length})</h3>
                 <div className="files-list">
                   {uploadedFiles.map((file, index) => (
                     <div key={index} className="file-item">
                       <div className="file-icon">
-                        <FileText size={20} />
+                        <FileText size={16} />
                       </div>
                       <div className="file-info">
                         <div className="file-name">{file.name}</div>
