@@ -29,7 +29,10 @@ const LoginPage: React.FC = () => {
     
     try {
       await login({ email, password });
-      navigate('/dashboard');
+      // Check if there's a specific path to redirect to after login
+      const { state } = location;
+      const destination = state && state.from ? state.from.pathname : '/dashboard';
+      navigate(destination);
     } catch (err: any) {
       setError(err.message || 'Error al iniciar sesión');
     }

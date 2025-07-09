@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Header from './components/Header';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/ProtectedRoute'; 
 import LoginPage from './pages/LoginPage';
 import MenuPage from './pages/MenuPage';
 import OverviewMainPage from './pages/OverviewMainPage';
@@ -43,7 +43,7 @@ const AnimatedRoutes = () => {
         <Routes location={location}>
           <Route path="/" element={<Header />} /> 
           <Route path="/login" element={
-            <ProtectedRoute requireAuth={false}>
+            <ProtectedRoute requireAuth={false} allowRoot={true}>
               <LoginPage />
             </ProtectedRoute>
           } />
