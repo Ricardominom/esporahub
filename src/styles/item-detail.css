@@ -228,6 +228,8 @@
   border-bottom: 1px solid transparent;
   transition: all 0.3s ease;
   text-align: left;
+  padding-left: 0;
+  margin-left: 0;
 }
 
 .item-detail-page.dark-theme .section-title {
@@ -245,6 +247,8 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding-left: 0;
+  margin-left: 0;
 }
 
 .item-description h3 {
@@ -252,6 +256,8 @@
   font-weight: 600;
   margin: 0 0 0.5rem 0;
   text-align: left;
+  padding-left: 0;
+  margin-left: 0;
 }
 
 .item-detail-page.dark-theme .item-description h3 {
