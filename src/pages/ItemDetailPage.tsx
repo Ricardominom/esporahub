@@ -145,11 +145,11 @@ const ItemDetailPage: React.FC = () => {
               <div className="item-meta">
                 <div className="meta-item">
                   <span className="meta-label">Responsable:</span>
-                  <span className="meta-value">Estudios</span>
+                  <span className="meta-value">Departamento de Estudios</span>
                 </div>
                 <div className="meta-item">
                   <span className="meta-label">Fecha de entrega:</span>
-                  <span className="meta-value">XXX</span>
+                  <span className="meta-value">20 de Julio</span>
                 </div>
               </div>
               
