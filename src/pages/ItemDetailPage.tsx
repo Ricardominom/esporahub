@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, Download, Upload, FileText } from 'lucide-react';
+import { Download, Upload, FileText } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import MenuBackground from '../components/MenuBackground';
 import LogoutDialog from '../components/LogoutDialog';
@@ -16,7 +16,6 @@ const ItemDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isVisible, setIsVisible] = useState(false);
-  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => 
     document.body.classList.contains('dark-theme')
   );
@@ -198,10 +197,6 @@ const ItemDetailPage: React.FC = () => {
         </div>
       </div>
 
-      <LogoutDialog
-        isOpen={showLogoutDialog}
-        onClose={() => setShowLogoutDialog(false)}
-      />
     </div>
   );
 };
