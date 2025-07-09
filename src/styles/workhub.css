@@ -909,8 +909,7 @@
 /* Project Table */
 .project-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
   font-size: 0.8rem;
   background: transparent;
   min-width: 2500px;
@@ -948,45 +947,46 @@
 /* Fixed Column Styles */
 .project-table thead th:first-child,
 .project-table tbody td:first-child {
-  position: sticky;
+  position: sticky !important;
   left: 0;
   z-index: 10;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease !important;
+  box-shadow: none !important;
 }
 
 .project-table thead th:first-child {
-  z-index: 20;
+  z-index: 20 !important;
 }
 
 .workhub-page.dark-theme .project-table thead th:first-child {
   background: linear-gradient(180deg, rgba(30, 30, 40, 0.98) 0%, rgba(20, 20, 30, 0.95) 100%);
-  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+  box-shadow: none !important;
 }
 
 .workhub-page.dark-theme .project-table tbody td:first-child {
   background: rgba(26, 11, 46, 0.95);
-  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+  box-shadow: none !important;
 }
 
 .workhub-page.light-theme .project-table thead th:first-child {
   background: linear-gradient(180deg, rgba(248, 250, 252, 0.98) 0%, rgba(241, 245, 249, 0.95) 100%);
-  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.03);
+  box-shadow: none !important;
 }
 
 .workhub-page.light-theme .project-table tbody td:first-child {
   background: rgba(255, 255, 255, 0.98);
-  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.03);
+  box-shadow: none !important;
 }
 
 /* Section Headers */
 .workhub-page.dark-theme .project-table .section-header td:first-child {
   background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(26, 11, 46, 0.45) 25%, rgba(88, 51, 139, 0.35) 50%, rgba(147, 112, 219, 0.3) 75%, rgba(88, 51, 139, 0.35) 100%) !important;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.12);
+  box-shadow: none !important;
 }
 
 .workhub-page.light-theme .project-table .section-header td:first-child {
   background: linear-gradient(135deg, rgba(248, 250, 252, 0.7) 0%, rgba(241, 245, 249, 0.75) 25%, rgba(226, 232, 240, 0.7) 50%, rgba(203, 213, 225, 0.65) 75%, rgba(226, 232, 240, 0.7) 100%) !important;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  box-shadow: none !important;
 }
 
 /* Fade Effect */
@@ -1003,11 +1003,11 @@
 }
 
 .workhub-page.dark-theme .project-table-wrapper::after {
-  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.2));
+  background: none;
 }
 
 .workhub-page.light-theme .project-table-wrapper::after {
-  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05));
+  background: none;
 }
 
 /* Table Headers */
