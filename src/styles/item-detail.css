@@ -232,20 +232,18 @@
 /* Content Layout */
 .item-detail-layout {
   display: grid;
-  grid-template-columns: 45fr 55fr;
-  gap: 1.5rem;
-  height: calc(100vh - 240px);
-  min-height: 600px;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  height: 100%;
+  min-height: calc(100vh - 250px);
 }
 
 /* Item Info Section */
 .item-info-section {
   padding: 2rem;
   border-radius: 16px;
-  transition: all 0.3s ease; 
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  transition: all 0.3s ease;
+  height: fit-content;
 }
 
 /* Dark theme item info section */
@@ -290,8 +288,7 @@
 .item-description {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  flex-grow: 1;
+  gap: 1rem;
 }
 
 .item-description h3 {
@@ -452,9 +449,7 @@
 .item-upload-section {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  height: 100%;
-  flex-grow: 1;
+  gap: 1.5rem;
 }
 
 /* Upload Area */
@@ -469,13 +464,11 @@
   -webkit-backdrop-filter: blur(20px);
   position: relative;
   overflow: hidden;
-  min-height: 80%;
+  min-height: 700px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 80%;
-  flex-grow: 1;
 }
 
 /* Dark theme upload area */
@@ -826,7 +819,7 @@
   
   .upload-area {
     padding: 3rem 1rem;
-    min-height: 500px;
+    min-height: 600px;
   }
   
   .upload-area h3 {
@@ -849,7 +842,7 @@
   
   .upload-area {
     padding: 2rem 1rem;
-    min-height: 400px;
+    min-height: 500px;
   }
   
   .upload-area h3 {
