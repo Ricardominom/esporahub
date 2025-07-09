@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, Download, Upload, FileText, Trash2 } from 'lucide-react';
+import { LogOut, Upload, FileText, Download, Trash2, Eye, Edit2, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import MenuBackground from '../components/MenuBackground';
 import LogoutDialog from '../components/LogoutDialog';
@@ -136,7 +136,6 @@ const ItemDetailPage: React.FC = () => {
               <h2 className="section-title" style={{ textAlign: 'left', paddingLeft: '0', marginLeft: '0' }}>{item?.section || 'Sección'}</h2>
             </div>
             <div className="item-description" style={{ flex: 1 }}>
-              <h3 style={{ textAlign: 'left', paddingLeft: '0', marginLeft: '0' }}>Estrategia</h3>
               <p>
                 El análisis de Humor Social es un reporte que analiza los sentimientos 
                 de la audiencia en un territorio determinado, con el propósito de 
@@ -156,10 +155,17 @@ const ItemDetailPage: React.FC = () => {
               
               <p className="item-note">Este item debe ser modificado (periodicidad)</p>
               
-              <button className="download-template-button">
-                <Download size={16} />
-                <span>Descargar plantilla</span>
-              </button>
+              <div className="item-actions">
+                <button className="download-template-button">
+                  <Download size={16} />
+                  <span>Descargar plantilla</span>
+                </button>
+                
+                <button className="complete-item-button">
+                  <CheckCircle size={16} />
+                  <span>Marcar como completado</span>
+                </button>
+              </div>
             </div>
           </div>
           
