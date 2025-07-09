@@ -198,14 +198,6 @@ const ItemDetailPage: React.FC = () => {
         </div>
       </div>
 
-      <button 
-        className="logout-button"
-        onClick={() => setShowLogoutDialog(true)}
-      >
-        <LogOut size={16} />
-        <span>Cerrar sesión</span>
-      </button>
-
       <LogoutDialog
         isOpen={showLogoutDialog}
         onClose={() => setShowLogoutDialog(false)}
