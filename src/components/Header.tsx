@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import LoginButton from './LoginButton';
 import Logo from './Logo';
 // import FlowEffect from './FlowEffect'; // Temporalmente deshabilitado
@@ -10,6 +10,7 @@ import '../styles/flow-effect.css';
 const Header: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setIsVisible(true);
@@ -20,12 +21,14 @@ const Header: React.FC = () => {
 
   // Verificar si hay una sesión activa
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      // Si hay una sesión activa, redirigir al dashboard
-      navigate('/dashboard');
+    // Solo redirigir si estamos en la página principal
+    if (location.pathname === '/') {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        navigate('/dashboard');
+      }
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   return (
     <header className="header dark-theme">

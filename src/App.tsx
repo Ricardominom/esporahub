@@ -28,8 +28,8 @@ const AnimatedRoutes = () => {
       <CSSTransition
         key={location.key}
         timeout={{
-          enter: 1500,
-          exit: 1500
+          enter: 1000,
+          exit: 1000
         }}
         classNames={{
           enter: 'page-enter',
@@ -41,7 +41,11 @@ const AnimatedRoutes = () => {
         unmountOnExit
       >
         <Routes location={location}>
-          <Route path="/" element={<Header />} /> 
+          <Route path="/" element={
+            <ProtectedRoute requireAuth={false}>
+              <Header />
+            </ProtectedRoute>
+          } />
           <Route path="/login" element={
             <ProtectedRoute requireAuth={false}>
               <LoginPage />

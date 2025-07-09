@@ -12,7 +12,7 @@
   --spacing-unit: 8px;
   --transition-duration: 0.3s;
   --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
-  --page-transition: 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+  --page-transition: 1s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 * {

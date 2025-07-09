@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { hasPermission } from '../data/users';
+import { storage } from '../utils/storage';
 import AccessDeniedModal from './AccessDeniedModal';
 
 interface ProtectedRouteProps {
@@ -19,6 +20,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const [showAccessDeniedModal, setShowAccessDeniedModal] = useState(false);
   const [deniedFeature, setDeniedFeature] = useState('');
   const location = useLocation();
+  const isLandingPage = location.pathname === '/';
 
   // Mostrar loading mientras se verifica la autenticación
   if (isLoading) {
@@ -29,8 +31,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  // Si requiere autenticación y no está autenticado, redirigir al login
-  if (requireAuth && !isAuthenticated) {
+  // Si es la página principal (/) y hay un token pero no está autenticado, 
+  // probablemente el token es inválido, así que lo eliminamos
+  if (isLandingPage && !isAuthenticated && storage.hasItem('authToken')) {
+    storage.removeItem('authToken');
+  }
+
+  // Si requiere autenticación y no está autenticado, redirigir al login,
+  // excepto si estamos en la página principal (/)
+  if (requireAuth && !isAuthenticated && !isLandingPage) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
@@ -70,7 +79,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Si está autenticado y trata de acceder al login, redirigir al dashboard
-  if (!requireAuth && isAuthenticated && location.pathname === '/login') {
+  if (!requireAuth && isAuthenticated && (location.pathname === '/login')) {
     return <Navigate to="/dashboard" replace />;
   }
 
