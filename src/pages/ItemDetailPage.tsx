@@ -167,7 +167,7 @@ const ItemDetailPage: React.FC = () => {
                   onClick={() => setIsCompleted(!isCompleted)}
                 >
                   {isCompleted ? <CheckSquare size={16} /> : <Square size={16} />}
-                  <span>{isCompleted ? 'Completado' : 'Marcar como completado'}</span>
+                  <span className={isCompleted ? 'completed-text' : ''}>{isCompleted ? 'Completado' : 'Marcar como completado'}</span>
                 </button>
               </div>
             </div>
