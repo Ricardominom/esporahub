@@ -8,12 +8,14 @@ interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAuth?: boolean;
   allowRoot?: boolean;
+  allowRoot?: boolean;
   requiredPermissions?: string[];
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
   children, 
   requireAuth = true,
+  allowRoot = false,
   allowRoot = false,
   requiredPermissions = []
 }) => {

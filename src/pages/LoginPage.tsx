@@ -33,6 +33,9 @@ const LoginPage: React.FC = () => {
       const { state } = location;
       const destination = state && state.from ? state.from.pathname : '/dashboard';
       navigate(destination);
+      const { state } = location;
+      const destination = state && state.from ? state.from.pathname : '/dashboard';
+      navigate(destination);
     } catch (err: any) {
       setError(err.message || 'Error al iniciar sesión');
     }
