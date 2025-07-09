@@ -658,7 +658,7 @@ const WorkHubPage: React.FC = () => {
               <div className="project-table-wrapper" ref={projectTableContainerRef} style={{ padding: '0' }}>
                 <table className="project-table" style={{ tableLayout: 'fixed', marginLeft: '0', borderSpacing: '0' }}>
                   <thead>
-                    <tr>
+                    <tr style={{ willChange: 'transform' }}>
                       <th style={{ width: '180px', minWidth: '180px' }}>Item</th>
                       <th style={{ width: '80px', minWidth: '80px' }}>Subele...</th>
                       <th style={{ width: '120px', minWidth: '120px' }}>Fase</th>
