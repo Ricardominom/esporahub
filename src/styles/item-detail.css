@@ -464,7 +464,7 @@
   -webkit-backdrop-filter: blur(20px);
   position: relative;
   overflow: hidden;
-  min-height: 900px;
+  min-height: 550px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -842,7 +842,7 @@
   
   .upload-area {
     padding: 1.5rem 1rem;
-    min-height: 650px;
+    min-height: 400px;
   }
   
   .upload-area h3 {
