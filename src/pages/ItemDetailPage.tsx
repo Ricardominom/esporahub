@@ -132,9 +132,9 @@ const ItemDetailPage: React.FC = () => {
         <div className="item-detail-layout">
           {/* Left side - Item information */}
           <div className="item-info-section" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h2 className="section-title">{item?.section || 'Sección'}</h2>
+            <h2 className="section-title" style={{ textAlign: 'left' }}>{item?.section || 'Sección'}</h2>
             <div className="item-description" style={{ flex: 1 }}>
-              <h3>Estrategia</h3>
+              <h3 style={{ textAlign: 'left' }}>Estrategia</h3>
               <p>
                 El análisis de Humor Social es un reporte que analiza los sentimientos 
                 de la audiencia en un territorio determinado, con el propósito de 
