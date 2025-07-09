@@ -176,8 +176,9 @@
 /* Item Actions */
 .item-actions {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   margin-top: 1rem;
+  width: 100%;
 }
 
 /* Content Styles */
@@ -352,6 +353,7 @@
 /* Download Button */
 .download-template-button {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
@@ -360,7 +362,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  width: fit-content;
+  width: 50%;
   margin-top: 1rem;
 }
 
@@ -393,6 +395,7 @@
 /* Complete Item Button */
 .complete-item-button {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
@@ -401,7 +404,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  width: fit-content;
+  width: 50%;
   margin-top: 0;
 }
 
