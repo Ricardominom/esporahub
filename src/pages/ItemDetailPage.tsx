@@ -132,7 +132,9 @@ const ItemDetailPage: React.FC = () => {
         <div className="item-detail-layout">
           {/* Left side - Item information */}
           <div className="item-info-section" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h2 className="section-title" style={{ textAlign: 'left', paddingLeft: '0', marginLeft: '0' }}>{item?.section || 'Sección'}</h2>
+            <div className="title-container" style={{ textAlign: 'left', paddingLeft: '0', marginLeft: '0' }}>
+              <h2 className="section-title" style={{ textAlign: 'left', paddingLeft: '0', marginLeft: '0' }}>{item?.section || 'Sección'}</h2>
+            </div>
             <div className="item-description" style={{ flex: 1 }}>
               <h3 style={{ textAlign: 'left', paddingLeft: '0', marginLeft: '0' }}>Estrategia</h3>
               <p>
