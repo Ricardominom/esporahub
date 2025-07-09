@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, Download, Upload, FileText } from 'lucide-react';
+import { LogOut, Download, Upload, FileText, Trash2 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import MenuBackground from '../components/MenuBackground';
 import LogoutDialog from '../components/LogoutDialog';
@@ -23,7 +23,7 @@ const ItemDetailPage: React.FC = () => {
   const [item, setItem] = useState<ItemDetailProps | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<{file: File, id: string}[]>([]);
   
   // Listen for theme changes
   useEffect(() => {
@@ -53,7 +53,11 @@ const ItemDetailPage: React.FC = () => {
     const selectedFiles = event.target.files;
     if (selectedFiles && selectedFiles.length > 0) {
       const newFiles = Array.from(selectedFiles);
-      setUploadedFiles(prev => [...prev, ...newFiles]);
+      const filesWithIds = newFiles.map(file => ({
+        file,
+        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      }));
+      setUploadedFiles(prev => [...prev, ...filesWithIds]);
     }
   };
 
@@ -73,9 +77,16 @@ const ItemDetailPage: React.FC = () => {
     
     const droppedFiles = e.dataTransfer.files;
     if (droppedFiles && droppedFiles.length > 0) {
-      const newFiles = Array.from(droppedFiles);
+      const newFiles = Array.from(droppedFiles).map(file => ({
+        file,
+        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      }));
       setUploadedFiles(prev => [...prev, ...newFiles]);
     }
+  };
+  
+  const handleDeleteFile = (fileId: string) => {
+    setUploadedFiles(prev => prev.filter(fileObj => fileObj.id !== fileId));
   };
 
   const formatFileSize = (bytes: number): string => {
@@ -180,14 +191,26 @@ const ItemDetailPage: React.FC = () => {
               <div className="uploaded-files">
                 <h3>Archivos subidos ({uploadedFiles.length})</h3>
                 <div className="files-list">
-                  {uploadedFiles.map((file, index) => (
-                    <div key={index} className="file-item">
+                  {uploadedFiles.map((fileObj) => (
+                    <div key={fileObj.id} className="file-item">
                       <div className="file-icon">
                         <FileText size={16} />
                       </div>
                       <div className="file-info">
-                        <div className="file-name">{file.name}</div>
-                        <div className="file-size">{formatFileSize(file.size)}</div>
+                        <div className="file-name">{fileObj.file.name}</div>
+                        <div className="file-size">{formatFileSize(fileObj.file.size)}</div>
+                      </div>
+                      <div className="file-actions">
+                        <button 
+                          className="file-delete-btn" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteFile(fileObj.id);
+                          }}
+                          title="Eliminar archivo"
+                        >
+                          <Trash2 size={14} />
+                        </button>
                       </div>
                     </div>
                   ))}
