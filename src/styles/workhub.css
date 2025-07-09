@@ -731,16 +731,18 @@
 .horizontal-scroll-indicator {
   width: 100%;
   height: 14px;
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: hidden;
   margin-bottom: 8px;
   border-radius: 6px;
   position: relative;
   z-index: 16;
   scrollbar-width: thin;
-  will-change: scroll-position; /* Optimize for animations */
+  will-change: scroll-position;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  overscroll-behavior-x: none; /* Prevent overscroll effects */
+  overscroll-behavior-x: none;
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 /* Dark theme horizontal scroll indicator */
@@ -896,14 +898,15 @@
 .project-table-wrapper {
   width: 100%; 
   height: 100%; 
-  overflow-x: auto; 
-  overflow-y: auto;  
+  overflow-x: auto;
+  overflow-y: auto;
   padding: 0; 
   position: relative; 
   will-change: scroll-position; /* Optimize for scroll performance */
   -webkit-overflow-scrolling: touch;
-  scroll-behavior: auto;
+  scroll-behavior: smooth;
   overscroll-behavior-x: none;
+  scrollbar-gutter: stable;
 }
 
 /* Project Table */
