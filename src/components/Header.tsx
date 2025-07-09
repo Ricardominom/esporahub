@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import LoginButton from './LoginButton';
 import Logo from './Logo';
 // import FlowEffect from './FlowEffect'; // Temporalmente deshabilitado
@@ -9,9 +9,7 @@ import '../styles/flow-effect.css';
 
 const Header: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [shouldRedirect, setShouldRedirect] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     setIsVisible(true);
@@ -23,23 +21,11 @@ const Header: React.FC = () => {
   // Verificar si hay una sesión activa
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    
-    // Only redirect if we're not already at the root path
-    // This prevents the automatic redirect when accessing the root URL directly
-    if (token && location.pathname === '/' && shouldRedirect) {
+    if (token) {
+      // Si hay una sesión activa, redirigir al dashboard
       navigate('/dashboard');
     }
-  }, [navigate, location.pathname, shouldRedirect]);
-  
-  // Set redirect flag after initial render
-  useEffect(() => {
-    // Small delay to ensure we don't redirect on initial page load
-    const timer = setTimeout(() => {
-      setShouldRedirect(true);
-    }, 500);
-    
-    return () => clearTimeout(timer);
-  }, []);
+  }, [navigate]);
 
   return (
     <header className="header dark-theme">

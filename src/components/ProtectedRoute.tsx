@@ -7,16 +7,12 @@ import AccessDeniedModal from './AccessDeniedModal';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAuth?: boolean;
-  allowRoot?: boolean;
-  allowRoot?: boolean;
   requiredPermissions?: string[];
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
   children, 
   requireAuth = true,
-  allowRoot = false,
-  allowRoot = false,
   requiredPermissions = []
 }) => {
   const { isAuthenticated, isLoading, user } = useAuthStore();
@@ -74,7 +70,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Si está autenticado y trata de acceder al login, redirigir al dashboard
-  if (!requireAuth && isAuthenticated && location.pathname === '/login' && !allowRoot) {
+  if (!requireAuth && isAuthenticated && location.pathname === '/login') {
     return <Navigate to="/dashboard" replace />;
   }
 
