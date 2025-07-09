@@ -123,7 +123,7 @@ const WorkHubPage: React.FC = () => {
   // Sync scroll between table and scroll indicator
   useEffect(() => {
     const projectTable = projectTableContainerRef.current;
-    const scrollIndicator = horizontalScrollIndicatorRef.current;
+    const scrollIndicator = horizontalScrollIndicatorRef.current; 
     const scrollContent = scrollContentRef.current;
     
     // Set the scroll content width to match the table width
@@ -167,12 +167,33 @@ const WorkHubPage: React.FC = () => {
       // Add wheel event for horizontal scrolling
       const handleWheel = (e: WheelEvent) => {
         if (e.deltaY !== 0) {
-          e.preventDefault();
+          e.preventDefault(); 
           
-          // Scroll directo sin animación para evitar desincronización
-          const scrollAmount = e.deltaY * 1.5;
-          projectTable.scrollLeft += scrollAmount;
-          scrollIndicator.scrollLeft = projectTable.scrollLeft;
+          // Enhanced smooth scrolling with better physics and acceleration
+          const scrollAmount = e.deltaY * 2.0; // Further increased scroll speed for better fluidity
+          const currentScroll = projectTable.scrollLeft;
+          const maxScroll = projectTable.scrollWidth - projectTable.clientWidth;
+          const targetScroll = Math.max(0, Math.min(currentScroll + scrollAmount, maxScroll));
+          
+          // Use smooth animation with requestAnimationFrame for better performance
+          const startTime = performance.now();
+          const duration = 200; // ms - even shorter duration for more responsive feel
+          
+          const animateScroll = (timestamp: number) => {
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease out cubic function for natural deceleration
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            
+            const newPosition = currentScroll + (targetScroll - currentScroll) * easeOut;
+            projectTable.scrollLeft = newPosition;
+            
+            if (progress < 1) {
+              requestAnimationFrame(animateScroll);
+            }
+          };
+          
+          requestAnimationFrame(animateScroll);
         }
       };
       
@@ -182,7 +203,7 @@ const WorkHubPage: React.FC = () => {
       return () => {
         projectTable.removeEventListener('scroll', handleTableScroll);
         scrollIndicator.removeEventListener('scroll', handleIndicatorScroll);
-        projectTable.removeEventListener('wheel', handleWheel);
+        projectTable.removeEventListener('wheel', handleWheel); 
         window.removeEventListener('resize', updateScrollContentWidth);
       }
     }
