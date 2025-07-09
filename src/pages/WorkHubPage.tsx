@@ -66,6 +66,8 @@ const WorkHubPage: React.FC = () => {
   );
   // Ref for horizontal scroll indicator
   const horizontalScrollIndicatorRef = React.useRef<HTMLDivElement>(null);
+  // Ref for scroll content to set proper width
+  const scrollContentRef = React.useRef<HTMLDivElement>(null);
   
   // Ref for project table container
   const projectTableContainerRef = React.useRef<HTMLDivElement>(null);
@@ -123,6 +125,13 @@ const WorkHubPage: React.FC = () => {
     const projectTable = projectTableContainerRef.current;
     const scrollIndicator = horizontalScrollIndicatorRef.current;
     
+    // Set the scroll content width to match the table width
+    if (activeTab === 'proyecto' && projectTable && scrollContentRef.current) {
+      // Get the actual scrollWidth of the table
+      const tableWidth = projectTable.scrollWidth;
+      scrollContentRef.current.style.minWidth = `${tableWidth}px`;
+    }
+    
     if (activeTab === 'proyecto' && projectTable && scrollIndicator) {
       // Smooth scroll synchronization from table to indicator
       const handleTableScroll = (e: Event) => {
@@ -150,11 +159,12 @@ const WorkHubPage: React.FC = () => {
           // Enhanced smooth scrolling with better physics
           const scrollAmount = e.deltaY * 1.5; // Increased scroll speed for better fluidity
           const currentScroll = projectTable.scrollLeft;
-          const targetScroll = currentScroll + scrollAmount;
+          const maxScroll = projectTable.scrollWidth - projectTable.clientWidth;
+          const targetScroll = Math.max(0, Math.min(currentScroll + scrollAmount, maxScroll));
           
           // Use smooth animation with requestAnimationFrame for better performance
           const startTime = performance.now();
-          const duration = 300; // ms - shorter duration for more responsive feel
+          const duration = 250; // ms - even shorter duration for more responsive feel
           
           const animateScroll = (timestamp: number) => {
             const elapsed = timestamp - startTime;
@@ -638,8 +648,12 @@ const WorkHubPage: React.FC = () => {
             <div 
               ref={horizontalScrollIndicatorRef}
               className="horizontal-scroll-indicator"
+              style={{
+                cursor: 'grab'
+              }}
             >
               <div 
+                ref={scrollContentRef}
                 className="scroll-content" 
                 style={{ 
                   height: '1px', 
@@ -655,8 +669,26 @@ const WorkHubPage: React.FC = () => {
                 <p>Cargando datos de la cuenta...</p>
               </div>
             ) : (
-              <div className="project-table-wrapper" ref={projectTableContainerRef} style={{ padding: '0' }}>
-                <table className="project-table" style={{ tableLayout: 'fixed', marginLeft: '0', borderSpacing: '0' }}>
+              <div 
+                className="project-table-wrapper" 
+                ref={projectTableContainerRef} 
+                style={{ 
+                  padding: '0',
+                  overscrollBehaviorX: 'none',
+                  willChange: 'scroll-position',
+                  WebkitOverflowScrolling: 'touch',
+                  cursor: 'grab'
+                }}
+              >
+                <table 
+                  className="project-table" 
+                  style={{ 
+                    tableLayout: 'fixed', 
+                    marginLeft: '0', 
+                    borderSpacing: '0',
+                    willChange: 'transform'
+                  }}
+                >
                   <thead>
                     <tr style={{ willChange: 'transform' }}>
                       <th style={{ width: '180px', minWidth: '180px' }}>Item</th>
