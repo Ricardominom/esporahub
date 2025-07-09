@@ -233,7 +233,7 @@
 .item-detail-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 1.5rem;
   height: 100%;
   min-height: calc(100vh - 250px);
 }
@@ -448,15 +448,16 @@
 /* Item Upload Section */
 .item-upload-section {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  flex-direction: column; 
+  height: 100%;
+  min-height: 600px;
 }
 
 /* Upload Area */
 .upload-area {
   border: 2px dashed transparent;
   border-radius: 12px;
-  padding: 3rem 1.5rem;
+  padding: 3rem 2rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -464,7 +465,9 @@
   -webkit-backdrop-filter: blur(20px);
   position: relative;
   overflow: hidden;
-  min-height: 700px;
+  flex: 1;
+  min-height: 600px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -818,8 +821,8 @@
   }
   
   .upload-area {
-    padding: 3rem 1rem;
-    min-height: 600px;
+    padding: 3rem 1.5rem;
+    min-height: 100%;
   }
   
   .upload-area h3 {
@@ -841,8 +844,8 @@
   }
   
   .upload-area {
-    padding: 2rem 1rem;
-    min-height: 500px;
+    padding: 2rem 1.5rem;
+    min-height: 100%;
   }
   
   .upload-area h3 {
