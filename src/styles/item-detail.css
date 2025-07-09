@@ -677,6 +677,46 @@
   color: #718096;
 }
 
+/* File Actions */
+.file-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.file-delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.item-detail-page.dark-theme .file-delete-btn {
+  color: rgba(239, 68, 68, 0.7);
+}
+
+.item-detail-page.dark-theme .file-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: rgba(239, 68, 68, 1);
+  transform: scale(1.1);
+}
+
+.item-detail-page.light-theme .file-delete-btn {
+  color: rgba(239, 68, 68, 0.7);
+}
+
+.item-detail-page.light-theme .file-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  transform: scale(1.1);
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .item-detail-layout {
